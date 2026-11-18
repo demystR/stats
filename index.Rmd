@@ -21,35 +21,45 @@ knitr::write_bib(c(
 
 **Author:** Sean Westwood
 
-This mini-book is designed for students who have already used functions in R, but still feel that functions and statistical equations are two different languages. The goal is to show that they are the same idea written in different forms.
+I would like to make a cool visual triangle of these three points around a central "statistical concepts", but as you might be able to tell I have instead just written this useless sentence and three bullet points:
+
+- functions 
+- equations
+- visualisations
+
+The goal of this book is to build up statistical understanding from these three different angles. You may have already encountered some combination of these, but perhaps don't yet feel an intuition for how they all link together. We will peel back the confusing abstractions and jargon, and walk you through each side of the triangle step-by-step until the full picture clicks into place.
+
+**Important:** you do not need to know anything more advanced than **adding and dividing** to get started with the first concept in this book! Everything beyond that will be built directly from what we walk through together. If all you have right now is a vague understanding of an "average" and a dream, this is the resource for you. 
 
 <div class="summary-box">
-In this resource, a statistical formula is treated as a blueprint: a set of instructions for turning inputs into an output.
+A statistical formula is like a blueprint: a set of instructions for turning inputs (e.g. some data) into an output (e.g. a standard deviation)
 
-A function is what you build from that blueprint. You give it the inputs, it carries out the instructions, and it gives you back the output.
+A statistical function is the machine you build from the blueprint. You give it the inputs, it carries out the instructions, and it gives you back the output.
+
+A statistical visualisation is a picture that links the cold hard numbers to what they mean in the real world.
 </div>
 
-By the end, students should be able to:
+If this book does its job well, students should be able to:
 
-- describe a function as **input -> process -> output**;
-- recognise arguments, defaults, and returned values;
-- translate simple mathematical notation into R code;
+- describe a function as **input -> process -> output**
+- translate simple mathematical notation into R code
 - build functions from scratch for various summary and test statistics from their equations
+- intuit how common visual representations of statistics represent the underlying numbers
 - understand how different tests and models relate to each other mathematically
-- build a null distribution by simulation, and use it to turn test statistics into p-values;
-- simulate true and null effects to illustrate power
+- build a null distribution by simulation, and use it to turn test statistics into p-values
+- simulate true effects alongside and null effects to illustrate power
 
 ## How To Use This Book
 
-The book has two core parts:
+Start with [Getting Started](#getting-started), which sets up an RStudio project for your work. The rough outline is that you will have an R script to add your own custom-built functions to so that you can access them whenever you like. Each chapter has its own exercises to download and follow along to, to help you build and apply this personal toolkit of functions. 
 
-- **Part I: Building Test Statistics.** You build every piece of each test statistic as your own R function, from the mean upwards, and check each one against the version that comes with R.
-- **Part II: Testing by Simulation.** You take those test statistics and simulate thousands of samples, to see where p-values and power come from.
+The recommended route is then to work through Part I first, then Part II. If you would rather build intuitions about null hypothesis testing sooner, you can dip into Part II as soon as you have finished the one-sample t-test chapter, starting with Null Distributions and then p-values. Each chapter in Part II tells you what is needed at the start as a minimum, but it will also include other tests as bonus examples.
 
-Two later parts, still being written, take the same approach further: the general linear model, which rebuilds the tests from Part I as one kind of model, and non-parametric tests, which work on ranks.
+- **Part I: Building Test Statistics.** We will build brick-by-brick every piece of each test statistic as your own R function, starting from simple summary statistics like mean and variance, and check each one against the *pro* version that most people use with R.
+- **Part II: Testing by Simulation.** We will take our new statistical functions and simulate many examples little by little, to see how distributions can be built up through sampling. We then use this idea to illustrate ideas such as p-values and power. 
 
-The recommended route is to work through Part I first, then Part II. If you want to build intuitions about null hypothesis testing sooner, you can dip into Part II as soon as you have finished the one-sample t-test chapter, starting with Null Distributions and then p-values. Each chapter in Part II says what it needs at the start, and its sections on other tests are bonus sections.
+There are many parts that are still in progress (to varying degrees) that take the same kind of approach a bit further:
+- GLM: in the same way we can understand how a t-test relates to the mean and variance of a sample, we can understand how a general linear model framework can express the exact same ideas in a different way. This section aims to rebuild the tests from Part I under one model
+- Non-parametric tests: when we have less strong beliefs about the shape and qualities of our data, we can employ similar techniques that look at the relative position of each data point in the dataset, rather than its actual value. 
 
-Type the code yourself when possible, then change the numbers and see if you can predict what will happen before running it again.
 
-Use the questions to check your predictions. Try to have a go yourself before using the hints or solutions!

@@ -17,6 +17,10 @@ The rendered HTML will be written to `docs/`. That folder is not committed: on e
 
 The book has two core parts, followed by two later parts that are still being written. The chapter order is set in `_bookdown.yml`. Files are named by part and position: `1a` to `1i` are Part I, `2a` and `2b` are Part II, and so on. A new chapter takes the next letter in its part, and the order in `_bookdown.yml` decides where it appears. Chapter numbers in the rendered book run straight through (1, 2, 3, ...). Chapters refer to each other with bookdown cross-references (`\@ref(id)`), so the numbers update themselves.
 
+Before Part I:
+
+- `0a-getting-started.Rmd` (`#getting-started`, unnumbered): creating a `demystify` RStudio project, the flat folder layout (`my_functions.R` and every exercise file side by side), two RStudio settings, downloading `my_functions.R`, installing tidyverse and pwr, and a setup check.
+
 Part I: Building Test Statistics
 
 - `1a-functions.Rmd` (`#functions`): what functions are: input, process, output.

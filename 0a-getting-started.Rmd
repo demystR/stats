@@ -1,0 +1,97 @@
+# Getting Started {#getting-started .unnumbered}
+
+Before the first function, get yourself set up. In each chapter you will write code in an exercise file, and you will keep every function you build in one file, `my_functions.R`, which the exercise files load. All of these files need to sit together in one folder, and an RStudio project is the easiest way to keep them there.
+
+<div class="note">
+**What you need**
+
+R and RStudio, installed on your own computer or available through your university. If you need to install them, follow the instructions on [Posit's download page](https://posit.co/download/rstudio-desktop/): install R first, then RStudio.
+</div>
+
+## What You Will Set Up {-}
+
+By the end of this page you will have one folder, called `demystify`, that looks like this:
+
+```text
+demystify/
+  demystify.Rproj                    the project file: open your work from here
+  my_functions.R                     your toolbox: every function you build goes here
+  1b-equations-exercises.Rmd         one exercise file for each chapter,
+  1c-standard-error-exercises.Rmd    added as you go
+  ...
+```
+
+Everything sits side by side in the same folder, with no folders inside it. That matters because each exercise file loads your toolbox with `source("my_functions.R")`, and R looks for `my_functions.R` in the same folder as the exercise file.
+
+## Create The Project {-}
+
+An **RStudio project** is a folder that RStudio treats as the home for one piece of work. When you open the project, RStudio starts in that folder, so your files can find each other.
+
+1. Open RStudio.
+2. Go to **File > New Project...**, choose **New Directory**, then **New Project**.
+3. In **Directory name**, type `demystify`.
+4. Click **Browse...** and choose where the folder should go: somewhere you will find again, such as your Documents folder. Avoid your Downloads folder.
+5. Click **Create Project**.
+
+RStudio restarts inside the new project. The project's name, `demystify`, appears in the top right corner of RStudio, and the **Files** pane shows the new folder with one file in it: `demystify.Rproj`.
+
+To come back to your work later, double-click `demystify.Rproj`, or open RStudio and choose the project from **File > Recent Projects**. Either way, RStudio opens in the right folder.
+
+## Two RStudio Settings {-}
+
+Go to **Tools > Global Options...** and, on the **General** page:
+
+- untick **Restore .RData into workspace at startup**;
+- set **Save workspace to .RData on exit** to **Never**.
+
+Then click **OK**. RStudio now starts every session empty, so each exercise file has to create everything it uses, from loading your toolbox onwards. If an exercise file runs from top to bottom in an empty session, you know your code works on its own.
+
+## Download Your Toolbox {-}
+
+Download this file and save it in your `demystify` folder:
+
+- <a href="exercises/my_functions.R" download>my_functions.R</a>
+
+Most browsers save into your Downloads folder. If yours did, move the file into `demystify` using File Explorer (Windows) or Finder (Mac).
+
+Back in RStudio, click the refresh arrow at the top right of the **Files** pane. You should now see `my_functions.R` next to `demystify.Rproj`. Click it to open it. It has a heading for each chapter and no functions yet: you will fill it in as you go, starting in Chapter \@ref(equations).
+
+## Each Chapter's Exercise File {-}
+
+From Chapter \@ref(equations) onwards, each chapter starts with a **Files For This Chapter** section with a link to its exercise file. Save each one into your `demystify` folder, next to `my_functions.R`, and open it from the **Files** pane.
+
+The exercise files are R Markdown files (`.Rmd`): text with chunks of R code in between. Keep the book open in your browser next to RStudio, and when the book asks you to write a function, write it in the exercise file and run it there.
+
+## Install The Packages {-}
+
+The book uses two packages:
+
+- **tidyverse**, for handling data and drawing plots, in every chapter;
+- **pwr**, for power calculations, in Chapter \@ref(effects-power).
+
+Install them once, by running this line in the RStudio **Console**:
+
+```{r install-packages, eval=FALSE}
+install.packages(c("tidyverse", "pwr"))
+```
+
+You only need to install a package once on each computer. After that, each exercise file loads the packages it needs with `library()`. On a university computer, they may already be installed.
+
+## Check Your Setup {-}
+
+With your project open, run these two lines in the **Console**:
+
+```{r check-setup, eval=FALSE}
+list.files()
+library(tidyverse)
+```
+
+`list.files()` lists the files in your project folder. You should see at least these two:
+
+```text
+[1] "demystify.Rproj" "my_functions.R"
+```
+
+If `my_functions.R` is missing, it is probably still in your Downloads folder. If `library(tidyverse)` says `there is no package called 'tidyverse'`, run the `install.packages()` line again.
+
+When both work, you are ready. Chapter \@ref(functions) starts with the simplest functions there are.

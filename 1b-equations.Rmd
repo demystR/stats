@@ -16,10 +16,11 @@ This is the first bit of the wider tree. We start with raw values, then build th
 
 ## Files For This Chapter
 
-You will write your own functions in RStudio as you read. Download these two files and save them in the same folder:
+You will write your own functions in RStudio as you read. Download this chapter's exercise file and save it in your `demystify` project folder, next to `my_functions.R` (see [Getting Started](#getting-started)):
 
-- <a href="exercises/1b-equations-exercises.Rmd" download>1b-equations-exercises.Rmd</a>: the exercises from this chapter with blanks for you to fill in;
-- <a href="exercises/my_functions.R" download>my_functions.R</a>: your toolbox. You will add each function you build to this file and reuse them in later chapters.
+- <a href="exercises/1b-equations-exercises.Rmd" download>1b-equations-exercises.Rmd</a>: the exercises from this chapter with blanks for you to fill in.
+
+If you have not downloaded your toolbox yet, get <a href="exercises/my_functions.R" download>my_functions.R</a> now and save it in the same folder. You will add each function you build to it and reuse them in later chapters.
 
 Open the exercise file in RStudio and keep this page open next to it. When the book asks you to write a function, write it in the exercise file and run it there.
 
@@ -556,7 +557,7 @@ So if we understand variance, standard deviation is just one more operation. You
 
 ## Add To Your Toolbox
 
-You have now built two functions. Rather than typing them out again in every chapter, you will keep them in one file, `my_functions.R`, and load that file whenever you need them. You downloaded it at the start of this chapter. It should be saved in the same folder as your exercise file.
+You have now built two functions. Rather than typing them out again in every chapter, you will keep them in one file, `my_functions.R`, and load that file whenever you need them. You downloaded it in [Getting Started](#getting-started). It should be saved in your `demystify` project folder, next to your exercise file.
 
 ### What Goes In The File
 
@@ -680,7 +681,7 @@ You should see:
 - **Missing the closing `}`.** `source()` stops with `unexpected end of input`.
 - **Copying a line that runs the function**, such as `my_mean(x)`. When the file is loaded on its own, `x` does not exist, so `source()` stops with `object 'x' not found`.
 - **Forgetting to save.** `source()` reads the saved file, so unsaved changes are ignored.
-- **`cannot open file 'my_functions.R'`** means the file is not in the same folder as your exercise file.
+- **`cannot open file 'my_functions.R'`** means the file is not in the same folder as your exercise file. Check that both are in your `demystify` project folder.
 
 ## Next Step
 

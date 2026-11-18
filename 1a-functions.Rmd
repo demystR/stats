@@ -101,6 +101,19 @@ add_points(demo_scores, points = 2)
 
 This uses the same idea as the first example. The only difference is that the addition happens to a column in a data frame.
 
+## Repeated Arithmetic
+
+A useful thing about R is that it can repeat simple arithmetic across a whole vector.
+
+Here we add 1 to every score:
+
+```{r repeated-operation-basic}
+score_values
+score_values + 1
+```
+
+R does the same operation to each value in the vector. Later, this will help us unpack statistical formulas one step at a time.
+
 ## A Function With A Default Data Frame
 
 Now we will build a function that:
@@ -121,20 +134,6 @@ add_points()
 If the function worked, the first adjusted score should be 50.
 
 The first adjusted score is `r fitb(50)`.
-
-
-## Repeated Arithmetic
-
-A useful thing about R is that it can repeat simple arithmetic across a whole vector.
-
-Here we add 1 to every score:
-
-```{r repeated-operation-basic}
-score_values
-score_values + 1
-```
-
-R does the same operation to each value in the vector. Later, this will help us unpack statistical formulas one step at a time.
 
 ## Bringing The Tools Together
 

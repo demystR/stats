@@ -5,6 +5,7 @@ before_chapter_script: _common.R
 delete_merged_file: true
 rmd_files:
   - "index.Rmd"
+  - "0a-getting-started.Rmd"
   - "1a-functions.Rmd"
   - "1b-equations.Rmd"
   - "1c-standard-error.Rmd"
