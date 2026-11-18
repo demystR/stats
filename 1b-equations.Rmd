@@ -352,7 +352,7 @@ The formula says:
 4. add all the squared distances together;
 5. divide by `n - 1`.
 
-So although it might look scary, all it actually is is repeated subtraction, squaring, addition, and division.
+So although it might look scary, it is only repeated subtraction, squaring, addition, and division.
 
 ## Notation To R
 
@@ -514,7 +514,7 @@ Think of the angles in a triangle. We know they add up to 180, so if we know two
 
 If I am being honest, I always found this concept a bit paradoxical and hard to get my head around: how can it constrain all of the values and none of them at the same time? The answer is that it is a **rule linking the values together** that is fixed, not a specific value. One rule costs one piece of information, so we only need to know $n - 1$ of the values to work out the last one, whichever one we leave until last. 
 
-If that still makes zero sense to you, the good news is that you do not need to be able to write the proof for the equation we decide to use - we can just trust the brainboxes that have already gone to the trouble, and as long as you understand the concept behind it you are fine!
+If that still makes zero sense to you, the good news is that you do not need to be able to write the proof for the equation we decide to use. We can just trust the brainboxes that have already gone to the trouble, and as long as you understand the concept behind it you are fine!
 `r unhide()`
 
 Dividing by `n - 1` is part of the blueprint, so our function needs to do it, and you can check that `var()` does the same.

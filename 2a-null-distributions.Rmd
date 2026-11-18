@@ -108,7 +108,7 @@ set.seed(123)
 
 In this world, Steves are exactly average. That is what the null hypothesis says: there is no difference between Steves and everyone else. But the 10 Steves in our sample have a mean height of `r round(mean(steves$height), 1)` cm, about `r round(mean(steves$height) - 175)` cm above average. Nothing makes Steves taller here. The gap comes purely from which 10 Steves happened to end up in the sample: sampling noise.
 
-A one-sample t-test would compare our sample mean with 175. So the real question is: how big a gap can sampling noise produce on its own, when the null hypothesis is true?
+A one-sample t-test would compare our sample mean with 175. So the question is: how big a gap can sampling noise produce on its own, when the null hypothesis is true?
 
 This chapter answers that by simulating the Steve world directly. `rnorm()` draws random values from a normal population. Here it draws a new group of 10 Steves, with heights from a population with a mean of 175 cm and an SD of 7 cm, and we calculate their t-value against 175:
 
@@ -398,7 +398,7 @@ Groups like those are rare enough that, if we ran the study once and got one of 
 
 Now picture a different study: people who were exposed to a certain toxin while they were growing up, compared with the average height. Suppose that group comes out unusually short. The result is exactly as rare as an unusually short group of Steves would be. What differs is the alternative. A toxin that affects growth is believable, so "something is going on" becomes a better explanation than a fluke.
 
-There is a catch too. With the rarest 5% marked, 5% of null t-values land past the cutoffs. Check 100 different first names that are all truly average, and about 5 of them will look unusually tall or short from noise alone.
+With the rarest 5% marked, 5% of null t-values still land past the cutoffs. Check 100 different first names that are all exactly average, and about 5 of them will look unusually tall or short from noise alone.
 
 ## Add To Your Toolbox
 

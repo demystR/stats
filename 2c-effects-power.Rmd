@@ -133,7 +133,7 @@ The histograms show where the two worlds overlap. About half of the orange t-val
 
 ## Counting Dots
 
-The same t-values drawn as dots, one per group, make it easier to see that we can simply *count* them:
+The same t-values drawn as dots, one per group, make it easier to see that we can *count* them:
 
 ```{r both-dots, fig.cap="The same 2000 t-values as dots. Solid dots are past the cutoffs.", fig.alt="Two horizontal strips of dots. The null strip is centred on zero with a few solid dots beyond the cutoffs. In the true-effect strip, about half the dots are solid, past the upper cutoff, and the rest are faded.", echo=FALSE}
 ggplot(worlds, aes(x = t, y = world, colour = world, alpha = past)) +

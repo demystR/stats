@@ -112,7 +112,7 @@ score_values
 score_values + 1
 ```
 
-R does the same operation to each value in the vector. Later, this will help us unpack statistical formulas one step at a time.
+R does the same operation to each value in the vector. Later, this will help us break down statistical formulas one step at a time.
 
 ## A Function With A Default Data Frame
 
