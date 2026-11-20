@@ -2,6 +2,9 @@
 
 # Wilcoxon Signed-Rank Test {#wilcoxon-signed-rank}
 
-*This chapter has not been written yet.*
+<div class="draft">Work in progress.</div>
 
-Non-parametric tests work on the ranks of the values instead of the values themselves, so they make fewer assumptions about the shape of the distribution. The Wilcoxon signed-rank test is the rank-based version of the one-sample and paired t-tests.
+*Not written yet.* Outline:
+
+- non-parametric: work on ranks, fewer assumptions about distribution shape
+- signed-rank = rank version of one-sample / paired t

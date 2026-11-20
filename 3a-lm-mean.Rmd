@@ -2,6 +2,12 @@
 
 # The Mean as a Model {#lm-mean}
 
-*This chapter has not been written yet.*
+<div class="draft">Work in progress.</div>
 
-The tests in Parts I and II are all versions of one model: the general linear model. This part rebuilds them with `lm()`, starting with the simplest model there is: one number for everyone. You write `my_sse()`, the sum of squared errors around a proposed centre, and plot it for a range of centres. The lowest point is at the mean, which links back to the squared distances in Chapter \@ref(equations). `lm(y ~ 1)` fits this model: its intercept is the mean, and its t-value is the one-sample t from Chapter \@ref(t-statistic).
+*Not written yet.* Outline:
+
+- Parts I and II tests are all one model (GLM); this part rebuilds them with `lm()`
+- simplest model: one number for everyone
+- `my_sse()`: SSE around a proposed centre, plot over centres
+- minimum at the mean (link: squared distances, Chapter \@ref(equations))
+- `lm(y ~ 1)`: intercept = mean, t = one-sample t (Chapter \@ref(t-statistic))

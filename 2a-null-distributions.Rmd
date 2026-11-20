@@ -2,11 +2,15 @@
 
 # Null Distributions {#null-distributions}
 
+<div class="draft">Work in progress.</div>
+
 ## How Far Is Far Enough?
 
-In Chapter \@ref(t-statistic), the ten scores sat about one standard error from 49 (t = 0.95) and nearly four standard errors from 46 (t = 3.79). The second t-value feels more convincing, but how far is far enough?
-
-To answer that, we need to know what t-values look like when there is **no** real difference: when the population mean really is equal to the comparison value. That is the **null hypothesis**, and the spread of t-values we get when it is true is the **null distribution**. We will build it the way we built the distribution of sample means in Chapter \@ref(standard-error): take lots of samples and keep a result from each.
+- recap Chapter \@ref(t-statistic): ten scores about 1 SE from 49 (t = 0.95), nearly 4 SEs from 46 (t = 3.79)
+- second feels more convincing, but how far is far enough?
+- need: what t-values look like when there is no real difference (population mean = comparison value)
+- define: null hypothesis; null distribution = spread of t-values when null true
+- build it as in Chapter \@ref(standard-error): many samples, keep a result from each
 
 <div class="summary-box">
 sample -> group mean -> t-value -> repeat many times -> null distribution -> which values are rare?
@@ -15,12 +19,12 @@ sample -> group mean -> t-value -> repeat many times -> null distribution -> whi
 <div class="note">
 **What you need for this chapter**
 
-Chapters \@ref(functions) to \@ref(t-statistic), up to the one-sample t-test. You do not need the rest of Part I.
+- Chapters \@ref(functions) to \@ref(t-statistic) (up to one-sample t-test); not the rest of Part I
 </div>
 
 ## Files For This Chapter
 
-Download the exercise file for this chapter and save it in the same folder as your `my_functions.R`:
+- download exercise file, save next to `my_functions.R`:
 
 - <a href="exercises/2a-null-distributions-exercises.Rmd" download>2a-null-distributions-exercises.Rmd</a>
 
@@ -46,9 +50,9 @@ all.equal(my_t_value(scores, 49), unname(t.test(scores, mu = 49)$statistic))
 
 ## A World Where The Null Is True
 
-In real research we never know whether the null hypothesis is true. In a simulation, we can make it true on purpose.
-
-Take a made-up question: are people called Steve taller than average? Picture a world where they are not. In the figure below, everyone's height has a mean of 175 cm and an SD of 7 cm, and Steves have exactly the same distribution. The heights are made up, but realistic for adults.
+- real research: never know if null true; simulation: make it true on purpose
+- made-up question: are people called Steve taller than average? world where they are not
+- everyone: mean 175 cm, SD 7 cm; Steves exactly the same (made up, realistic for adults)
 
 ```{r steve-world, fig.cap="Left: in this world, the heights of people called Steve (dashed) match everyone's heights (filled) exactly. Right: a random sample of 10 Steves from that world. The heights are made up but realistic.", fig.alt="Two panels with height in centimetres on the x-axis. On the left, a filled normal curve for everyone and a dashed curve for people called Steve lie exactly on top of each other, centred on a dotted line at 175. On the right, ten dots for a sample of Steves, with a dotted line at 175 and a solid orange line at the sample mean of 179, about 4 cm higher.", echo=FALSE}
 set.seed(4)
@@ -106,11 +110,12 @@ ggplot() +
 set.seed(123)
 ```
 
-In this world, Steves are exactly average. That is what the null hypothesis says: there is no difference between Steves and everyone else. But the 10 Steves in our sample have a mean height of `r round(mean(steves$height), 1)` cm, about `r round(mean(steves$height) - 175)` cm above average. Nothing makes Steves taller here. The gap comes purely from which 10 Steves happened to end up in the sample: sampling noise.
+- null here = Steves exactly average, no difference
+- but sample of 10: mean `r round(mean(steves$height), 1)` cm, about `r round(mean(steves$height) - 175)` cm above average
+- gap is purely which Steves ended up in the sample: sampling noise
+- one-sample t-test compares sample mean with 175; question: how big a gap can noise alone produce?
 
-A one-sample t-test would compare our sample mean with 175. So the question is: how big a gap can sampling noise produce on its own, when the null hypothesis is true?
-
-This chapter answers that by simulating the Steve world directly. `rnorm()` draws random values from a normal population. Here it draws a new group of 10 Steves, with heights from a population with a mean of 175 cm and an SD of 7 cm, and we calculate their t-value against 175:
+- simulate the Steve world: `rnorm()` draws from a normal population (mean 175, SD 7), 10 Steves, t against 175
 
 ```{r one-null-sample}
 null_sample <- rnorm(n = 10, mean = 175, sd = 7)
@@ -119,11 +124,13 @@ null_sample
 my_t_value(null_sample, comparison_value = 175)
 ```
 
-Run that chunk a few times. The heights change every time, and so does the t-value, even though nothing is going on: Steves are exactly average. The heights are in centimetres. The t-value makes the same comparison, the sample mean against 175, but measures the gap in standard errors: a t-value of 2 means the group's mean height is two standard errors above 175.
+- run a few times: heights and t change every time, though nothing is going on
+- heights in cm; t = same comparison measured in SEs (t = 2: mean two SEs above 175)
 
 ## Many Groups Of Steves
 
-One group of 10 is a single draw. The widget below draws group after group from the same world. The top panel is the world, the middle panel is the latest group of 10 Steves, and each group's mean drops into the histogram at the bottom.
+- one group = one draw; widget draws group after group
+- top = world, middle = latest 10 Steves, bottom = histogram of group means
 
 <iframe class="demyst-widget" src="apps/sampling/embed.html?style=steve&mean=175&sd=7&n=10&xmin=150&xmax=200&unit=cm&xlabel=Height%20(cm)" width="100%" height="860" title="Sampling groups of Steves interactive widget" style="border: 0;"></iframe>
 
@@ -139,11 +146,11 @@ window.addEventListener("message", function (event) {
 });
 </script>
 
-1. Click **+1** a few times. Watch each group of Steves, its mean, and where that mean lands.
-2. Click **+10**, then **+100**. Compare the spread of the group means with the spread of individual heights in the top panel.
-3. Tick **Expected shape**, and compare **SD of the means** with **Formula SE**.
+1. **+1** a few times: each group, its mean, where it lands
+2. **+10**, **+100**: spread of means vs spread of individual heights
+3. tick **Expected shape**; compare **SD of the means** with **Formula SE**
 
-Here is the same thing in R, with `replicate()` as in Chapter \@ref(standard-error): 1000 groups of 10 Steves, keeping each group's mean height.
+- same in R with `replicate()` as in Chapter \@ref(standard-error): 1000 groups of 10, keep each mean
 
 ```{r null-means-seed, include=FALSE}
 # a fixed seed, so the numbers quoted below stay the same from render to render
@@ -156,29 +163,27 @@ null_means <- replicate(1000, mean(rnorm(n = 10, mean = 175, sd = 7)))
 c(sd_of_means = my_sd(null_means), formula_se = 7 / sqrt(10))
 ```
 
-The group means bunch up far more tightly than individual heights. Individual Steves spread with an SD of 7 cm, but the group means spread by only about `r round(my_sd(null_means), 1)` cm: the standard error from Chapter \@ref(standard-error), 7 / √10 = `r round(7 / sqrt(10), 2)` cm.
-
-A few groups still land well away from 175, though: the tallest of the 1000 groups averaged `r round(max(null_means), 1)` cm and the shortest `r round(min(null_means), 1)` cm. Every one of them came from a world where Steves are exactly average.
+- means much tighter than individuals: SD 7 cm vs about `r round(my_sd(null_means), 1)` cm
+- = SE from Chapter \@ref(standard-error), 7 / √10 = `r round(7 / sqrt(10), 2)` cm
+- still some far from 175: tallest group `r round(max(null_means), 1)` cm, shortest `r round(min(null_means), 1)` cm, all from a world where Steves are average
 
 ## One Group, One t-Value
 
-Group means are in centimetres. A t-value makes the same comparison, the group mean against 175, but measures the gap in standard errors. The widget below works out one group's t-value step by step.
+- means in cm; t = same comparison in SEs
+- widget: one group's t step by step
 
 <iframe class="demyst-widget" src="apps/t-steps/embed.html" width="100%" height="700" title="One group, one t-value interactive widget" style="border: 0;"></iframe>
 
-1. Click **Sample** to draw a group of 10 Steves. Watch the mean, SD and standard error fill in.
-2. Click **Calculate t** to finish the equation.
-3. Click **Add t** to put the t-value in the histogram.
-4. Repeat a few times. Most t-values land near 0, and now and then one lands further out.
+1. **Sample**: 10 Steves; mean, SD, SE fill in
+2. **Calculate t**
+3. **Add t**: into histogram
+4. repeat: most near 0, now and then one further out
 
 ## Your Turn: Write `my_null_t()`
 
-Now do the same in R. Wrap the steps from the one-sample chunk above in a function, so we can repeat them easily. It needs three inputs: the sample size, and the mean and SD of the population.
-
-1. draw a sample with `rnorm()`;
-2. calculate its t-value with `my_t_value()`, using the population mean as the comparison value.
-
-Using the population mean as the comparison value is what makes the null hypothesis true.
+- wrap the one-sample steps in a function; inputs: sample size, population mean, population SD
+- steps: sample with `rnorm()`; t with `my_t_value()`, comparison value = population mean
+- comparison = population mean is what makes the null true
 
 ```{r my-null-t-exercise, eval=FALSE}
 my_null_t <- function(n, pop_mean, pop_sd) {
@@ -191,7 +196,7 @@ my_null_t(n = 10, pop_mean = 175, pop_sd = 7)
 ```
 
 `r hide("Show a hint")`
-`sample_values` uses `rnorm(n = n, mean = pop_mean, sd = pop_sd)`, and `output` uses `my_t_value(sample_values, comparison_value = pop_mean)`.
+- `sample_values`: `rnorm(n = n, mean = pop_mean, sd = pop_sd)`; `output`: `my_t_value(sample_values, comparison_value = pop_mean)`
 `r unhide()`
 
 `r hide("Show one solution")`
@@ -208,7 +213,8 @@ my_null_t(n = 10, pop_mean = 175, pop_sd = 7)
 
 ## Check It Against R
 
-Because `my_null_t()` uses random numbers, every run gives a different answer. To check it, we can make R repeat the same random numbers with `set.seed()`. With the same seed, `my_null_t()` should give exactly the same t-value as R's own `t.test()` on the same random sample:
+- random, so different each run; `set.seed()` repeats the same random numbers
+- same seed: `my_null_t()` should match `t.test()` on the same sample exactly
 
 ```{r my-null-t-check}
 set.seed(1)
@@ -225,7 +231,7 @@ all.equal(mine, r_version)
 
 ## Many t-Values
 
-Now repeat it 1000 times with `replicate()`:
+- repeat 1000 times with `replicate()`
 
 ```{r null-ts}
 null_ts <- replicate(1000, my_null_t(n = 10, pop_mean = 175, pop_sd = 7))
@@ -243,25 +249,25 @@ ggplot(tibble(t = null_ts), aes(x = t)) +
 ```{r null-histogram-code, ref.label="null-histogram", eval=FALSE, webex.hide="Show the plot code"}
 ```
 
-This is the null distribution of t for samples of 10. Each t-value is one group of 10 Steves, compared with 175 and measured in standard errors instead of centimetres. Notice its shape:
+- = null distribution of t for n = 10; each t = one group, in SEs not cm
+- notice:
+  - centred on 0 (on average sample mean = population mean)
+  - most between about -2 and 2
+  - a few further out, both directions, though null true
+- point out: shape doesn't depend on population mean or SD, only n (any 10 values give same null distribution); next chapter relies on this
 
-- it is centred on 0, because on average the sample mean is right on the population mean;
-- most t-values are between about -2 and 2;
-- a few land further out, in both directions, even though the null is true.
-
-Measuring in standard errors has a useful side effect. The null distribution of t has the same shape whatever the mean and SD of the population, as long as the sample size is the same: groups of 10 Steves, or of any other 10 values, give the same null distribution. The next chapter relies on that.
-
-Which t-values are common, and which are rare? The widget below builds 1000 null t-values at a time. The slider picks out the rarest share of them, split between the two tails, so you can ask: how rare is this range of values?
+- which t-values common, which rare? widget: 1000 null t-values at a time
+- slider picks rarest share, split across two tails
 
 <iframe class="demyst-widget" src="apps/rareness/embed.html" width="100%" height="480" title="Which t-values are rare interactive widget" style="border: 0;"></iframe>
 
-1. Click **Regenerate** a few times. The details change every time, but the shape stays the same.
-2. Move the slider. The orange values are the rarest ones, and the sentence under the plot says where they start.
-3. How far from 0 do you have to go before only the rarest 5% are left? Is it the same after you regenerate?
+1. **Regenerate** a few times: details change, shape stays
+2. move slider: orange = rarest; sentence under plot says where they start
+3. how far from 0 before only rarest 5% left? same after regenerating?
 
 ## Where Do The Rare Values Start?
 
-To find where the rarest values start in our own `null_ts`, put the t-values in order. `sort()` arranges a set of values from smallest to largest. `head()` shows the first six values and `tail()` the last six:
+- put our `null_ts` in order: `sort()` smallest to largest; `head()` first six, `tail()` last six
 
 ```{r sorted-ts}
 sorted_ts <- sort(null_ts)
@@ -270,16 +276,14 @@ head(sorted_ts)
 tail(sorted_ts)
 ```
 
-Say we want to mark the rarest 5% of our 1000 t-values. 5% of 1000 is 50, so 25 in each tail:
-
-- the **lower cutoff** is the 26th smallest t-value, so 25 values are below it;
-- the **upper cutoff** is the 975th, so 25 values are above it (1000 - 975 = 25).
-
-Square brackets pick out a value by its position: `sorted_ts[1]` is the smallest t-value and `sorted_ts[1000]` is the largest.
+- rarest 5% of 1000 = 50, so 25 per tail
+  - **lower cutoff**: 26th smallest (25 below)
+  - **upper cutoff**: 975th (25 above, 1000 - 975 = 25)
+- square brackets pick by position: `sorted_ts[1]` smallest, `sorted_ts[1000]` largest
 
 ### Your Turn: Pick Them Out By Position
 
-Use square brackets to pick the two cutoffs out of `sorted_ts`:
+- pick both cutoffs out of `sorted_ts`
 
 ```{r cutoffs-by-position-exercise, eval=FALSE}
 lower <-
@@ -289,7 +293,7 @@ c(lower = lower, upper = upper)
 ```
 
 `r hide("Show a hint")`
-Put the position inside the square brackets: `sorted_ts[26]` for `lower`. Which position holds `upper`?
+- `sorted_ts[26]` for `lower`; which position for `upper`?
 `r unhide()`
 
 `r hide("Show one solution")`
@@ -303,12 +307,9 @@ c(lower = lower, upper = upper)
 
 ### Your Turn: Write `my_cutoffs()`
 
-The positions 26 and 975 only work for 1000 t-values and the rarest 5%. A function can work them out for any number of t-values and any share. Its second input, `alpha`, is the share of values we're marking as rare: `alpha = 0.05` marks the rarest 5%. The next chapter explains alpha properly.
-
-1. sort the t-values;
-2. count them with `length()`;
-3. work out `k`, the number of values in each tail;
-4. the lower cutoff is in position `k + 1`, and the upper cutoff is in position `n - k`.
+- 26 and 975 only work for 1000 values and 5%; function generalises
+- `alpha` = share marked rare (`0.05` = rarest 5%); explained properly next chapter
+- steps: sort; count with `length()`; `k` = values per tail; lower at `k + 1`, upper at `n - k`
 
 ```{r my-cutoffs-exercise, eval=FALSE}
 my_cutoffs <- function(null_ts, alpha = 0.05) {
@@ -325,11 +326,9 @@ my_cutoffs(null_ts)
 ```
 
 `r hide("Show a hint")`
-`sorted` is `sort(null_ts)` and `n` is `length(sorted)`.
-
-`k` is `floor(n * alpha / 2)`. With 1000 values, `1000 * 0.05 / 2` is 25. `floor()` rounds down to a whole number, because a position has to be a whole number: with 990 values, `990 * 0.05 / 2` is 24.75, and `floor()` makes it 24.
-
-`lower` is `sorted[k + 1]` and `upper` is `sorted[n - k]`. With 1000 values, those are positions 26 and 975, the same as before.
+- `sorted` = `sort(null_ts)`; `n` = `length(sorted)`
+- `k` = `floor(n * alpha / 2)`; 1000 gives 25; `floor()` rounds down since positions are whole (990 gives 24.75, so 24)
+- `lower` = `sorted[k + 1]`, `upper` = `sorted[n - k]`; with 1000, positions 26 and 975 as before
 `r unhide()`
 
 `r hide("Show one solution")`
@@ -348,11 +347,14 @@ my_cutoffs(null_ts)
 ```
 `r unhide()`
 
-You should get the same two values you picked out by position. Notice the default, `alpha = 0.05`, just like the defaults in Chapter \@ref(functions).
+- should match the by-position values
+- note default `alpha = 0.05`, like defaults in Chapter \@ref(functions)
 
 ### See The Rare Values
 
-Here is a plotting script to try different shares. Set `alpha_choice` to 0.5, 0.1, 0.05 and 0.01, and run it each time. The orange bars are the t-values beyond the cutoffs, the dashed lines are the cutoffs, and the table counts the orange values. `|` means "or", so `rare` is `TRUE` for a t-value below the lower cutoff or above the upper one.
+- try `alpha_choice` = 0.5, 0.1, 0.05, 0.01
+- orange = beyond cutoffs; dashed = cutoffs; table counts orange
+- explain `|` = "or": `rare` TRUE below lower or above upper
 
 ```{r rare-plot, fig.cap="The null t-values, with the rarest 5% (alpha_choice = 0.05) in orange and dashed lines at the cutoffs.", fig.alt="Histogram of 1000 null t-values in blue, with the bars beyond about -2.1 and 2.2 coloured orange and dashed vertical lines at those two values."}
 alpha_choice <- 0.05
@@ -374,11 +376,12 @@ null_t_data %>%
   summarise(beyond = sum(rare), share = mean(rare))
 ```
 
-With `alpha_choice = 0.05`, exactly `r sum(null_t_data$rare)` of the 1000 t-values are beyond the cutoffs, 25 in each tail: that is how we chose them. As the share gets smaller, the cutoffs move outwards, and only t-values further from 0 count as rare.
+- at 0.05: exactly `r sum(null_t_data$rare)` of 1000 beyond, 25 per tail (by construction)
+- smaller share: cutoffs move outwards
 
 ### Compare With R
 
-R's `qt()` gives the cutoffs for the exact t distribution, which for samples of 10 has 9 degrees of freedom:
+- `qt()` = cutoffs for exact t distribution; n = 10 gives 9 df
 
 ```{r cutoffs-compare}
 tibble(
@@ -388,17 +391,16 @@ tibble(
 )
 ```
 
-They are close, but not identical. Your cutoffs come from 1000 random samples, so they wobble a little every time you build a new `null_ts`, just like a sample mean wobbles around the population mean.
+- close, not identical: simulated cutoffs wobble with each new `null_ts`, like a sample mean
 
 ## Rare, But Not Impossible
 
-Back to the groups of Steves. If Steves really are average, groups of 10 that come out particularly tall or short are rare. Of the 1000 group means in `null_means`, only `r sum(null_means > 180)` averaged more than 180 cm, and only `r sum(null_means < 170)` averaged less than 170 cm. The tallest 25 groups, the top 2.5%, all averaged more than `r round(sort(null_means)[975], 1)` cm.
-
-Groups like those are rare enough that, if we ran the study once and got one of them, we might start to wonder whether something is going on with Steves. But there is no believable reason for Steves to be taller than anyone else. So even if our one group came out unusually tall, a fluke is still the better explanation.
-
-Now picture a different study: people who were exposed to a certain toxin while they were growing up, compared with the average height. Suppose that group comes out unusually short. The result is exactly as rare as an unusually short group of Steves would be. What differs is the alternative. A toxin that affects growth is believable, so "something is going on" becomes a better explanation than a fluke.
-
-With the rarest 5% marked, 5% of null t-values still land past the cutoffs. Check 100 different first names that are all exactly average, and about 5 of them will look unusually tall or short from noise alone.
+- back to Steves: of 1000 means, only `r sum(null_means > 180)` above 180 cm, `r sum(null_means < 170)` below 170 cm
+- top 2.5% (tallest 25) all above `r round(sort(null_means)[975], 1)` cm
+- rare enough to make us wonder, but no believable reason for Steves to be taller, so fluke still better explanation
+- contrast: group exposed to a toxin while growing up, comes out unusually short; equally rare
+- difference is the alternative: toxin affecting growth is believable, so "something going on" beats fluke
+- 5% of null t-values still past the cutoffs: 100 average first names, about 5 look unusual from noise alone
 
 ## Add To Your Toolbox
 
@@ -465,4 +467,4 @@ You should see two `TRUE`s:
 values -> group mean -> t-value -> many null t-values -> where the rare values start
 </div>
 
-The next chapter, Chapter \@ref(p-values), puts a number on "rare".
+- next: Chapter \@ref(p-values) puts a number on "rare"

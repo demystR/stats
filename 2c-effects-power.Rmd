@@ -1,10 +1,12 @@
 # Effects and Power {#effects-power}
 
+<div class="draft">Work in progress.</div>
+
 ## Two Worlds
 
-In Chapters \@ref(null-distributions) and \@ref(p-values), every group of Steves came from a world where Steves are exactly average. 5% of the null t-values land past the cutoffs, and that 5% is alpha, the Type I error rate.
-
-Now we add a second world, where Steves really are taller. The question flips around: if the difference is real, how often does a group's t-value land past the same cutoffs? That proportion is called **power**.
+- recap: Chapters \@ref(null-distributions) and \@ref(p-values) used only the null world (Steves exactly average); 5% of null t-values past cutoffs = alpha = Type I error rate
+- now add a second world where Steves really are taller
+- question flips: if the difference is real, how often does a group's t pass the same cutoffs? define: **power**
 
 <div class="summary-box">
 null world -> cutoffs -> how often do groups from the effect world pass those same cutoffs?
@@ -13,12 +15,12 @@ null world -> cutoffs -> how often do groups from the effect world pass those sa
 <div class="note">
 **What you need for this chapter**
 
-Chapter \@ref(t-statistic) (the one-sample t-test), Chapter \@ref(null-distributions) (null distributions and cutoffs) and Chapter \@ref(p-values) (p-values).
+- Chapter \@ref(t-statistic) (one-sample t-test), Chapter \@ref(null-distributions) (null distributions, cutoffs), Chapter \@ref(p-values) (p-values)
 </div>
 
 ## Files For This Chapter
 
-Download the exercise file for this chapter and save it in the same folder as your `my_functions.R`:
+- download the exercise file, save next to `my_functions.R`:
 
 - <a href="exercises/2c-effects-power-exercises.Rmd" download>2c-effects-power-exercises.Rmd</a>
 
@@ -45,7 +47,7 @@ all.equal(my_p_value(my_t_value(scores, 46), df = 9), t.test(scores, mu = 46)$p.
 all.equal(my_cutoffs(20:1, alpha = 0.1), c(2, 19))
 ```
 
-We will also use the `pwr` package, which you may have met before. It has ready-made power functions, so we can check our simulations against it.
+- `pwr` package: ready-made power functions, used to check simulations
 
 ```{r load-pwr}
 library(pwr)
@@ -53,7 +55,7 @@ library(pwr)
 
 ## A World With An Effect
 
-In this world, people called Steve really are taller. Everyone's heights still have a mean of 175 cm and an SD of 7 cm, but Steves' heights have a mean of 180 cm, with the same SD. The heights are made up, but realistic for adults.
+- effect world: everyone mean 175 cm, SD 7; Steves mean 180 cm, same SD (made up but realistic)
 
 ```{r steve-effect-world, fig.cap="In the effect world, Steves' heights (dashed) sit 5 cm to the right of everyone's (filled). The heights are made up but realistic.", fig.alt="Two normal curves of height in centimetres. A filled curve for everyone is centred on a dotted line at 175. A dashed curve for people called Steve, the same shape, is centred on a solid orange line at 180.", echo=FALSE}
 heights <- tibble(height = seq(150, 200, by = 0.5)) %>%
@@ -81,19 +83,23 @@ ggplot(heights, aes(x = height)) +
 ```{r steve-effect-world-code, ref.label="steve-effect-world", eval=FALSE, webex.hide="Show the plot code"}
 ```
 
-We still compare each group of 10 Steves with 175, the average. The null hypothesis says Steves are average; in this world it is false.
-
-How big is the difference? A common way to say is **Cohen's d**: the difference between the true mean and the comparison value, measured in standard deviations.
+- still compare each group of 10 Steves with 175; null says Steves average, false in this world
+- define: **Cohen's d** = difference between true mean and comparison value, in SDs
 
 $$
 d = \frac{\text{true mean} - \text{comparison value}}{\text{SD}}
 $$
 
-For the Steves, that is (180 - 175) / 7 = `r round(5 / 7, 2)`. A d of 0.2 is usually called small, 0.5 medium and 0.8 large, so this is a medium-to-large difference: about 0.7 of an SD. You will write a function for d later in the chapter.
+- Steves: (180 - 175) / 7 = `r round(5 / 7, 2)`
+- rules of thumb: 0.2 small, 0.5 medium, 0.8 large; so medium-to-large, about 0.7 SD
+- function for d comes later
 
 ## Build Both Distributions
 
-Now take 1000 groups of 10 from each world. The null t-values and the cutoffs come from the null world, exactly as in Chapter \@ref(null-distributions). For the effect world, each group of 10 Steves comes from a population with a mean of 180, and its t-value is still worked out against 175. You will wrap that second line in your own function, `my_effect_t()`, later in the chapter.
+- 1000 groups of 10 from each world
+- null t-values and cutoffs from null world, as in Chapter \@ref(null-distributions)
+- effect world: population mean 180, t still against 175
+- second line becomes `my_effect_t()` later
 
 ```{r both-worlds}
 null_ts <- replicate(1000, my_null_t(n = 10, pop_mean = 175, pop_sd = 7))
@@ -129,11 +135,12 @@ ggplot(worlds, aes(x = t, fill = world, alpha = past)) +
 ```{r both-histograms-code, ref.label="both-histograms", eval=FALSE, webex.hide="Show the plot code"}
 ```
 
-The histograms show where the two worlds overlap. About half of the orange t-values are past the upper cutoff, but the rest sit in the same place as the blue ones. Those groups of Steves came from a world where Steves really are taller, but their t-values look like they could have come from the null world.
+- notice: about half the orange t-values past upper cutoff; rest overlap the blue
+- those groups came from the effect world but look like null-world groups
 
 ## Counting Dots
 
-The same t-values drawn as dots, one per group, make it easier to see that we can *count* them:
+- same t-values as dots, one per group, so we can *count* them
 
 ```{r both-dots, fig.cap="The same 2000 t-values as dots. Solid dots are past the cutoffs.", fig.alt="Two horizontal strips of dots. The null strip is centred on zero with a few solid dots beyond the cutoffs. In the true-effect strip, about half the dots are solid, past the upper cutoff, and the rest are faded.", echo=FALSE}
 ggplot(worlds, aes(x = t, y = world, colour = world, alpha = past)) +
@@ -151,7 +158,7 @@ ggplot(worlds, aes(x = t, y = world, colour = world, alpha = past)) +
 ```{r both-dots-code, ref.label="both-dots", eval=FALSE, webex.hide="Show the plot code"}
 ```
 
-Count the solid and faded dots in each world:
+- count solid and faded dots in each world:
 
 ```{r count-both}
 null_past <- null_ts < cutoffs[1] | null_ts > cutoffs[2]
@@ -164,31 +171,29 @@ tibble(
 )
 ```
 
-`|` means "or", so `null_past` is `TRUE` for every t-value below the lower cutoff *or* above the upper one. `!` means "not", so `sum(!null_past)` counts the ones that are not past the cutoffs.
+- explain `|` = "or" (below lower *or* above upper); `!` = "not", so `sum(!null_past)` counts not past
 
 ```{r counts-table, echo=FALSE}
 n_null_past <- sum(null_past)
 n_effect_past <- sum(effect_past)
 ```
 
-Those four numbers fill in a table of every possible outcome:
+- four numbers fill a table of every outcome:
 
 | | Not past the cutoff | Past the cutoff |
 |---|---|---|
 | **Null world** (Steves are average) | `r 1000 - n_null_past`: correct, no effect found | `r n_null_past`: **Type I error** (false positive) |
 | **Effect world** (Steves are taller) | `r 1000 - n_effect_past`: **Type II error** (false negative) | `r n_effect_past`: correct, effect found |
 
-- The proportion of null groups past the cutoff is **alpha**, the Type I error rate. We chose it to be 5%.
-- The proportion of effect groups *not* past the cutoff is **beta**, the Type II error rate.
-- The proportion of effect groups past the cutoff is **power**. Power is $1 - \beta$.
-
-Here, only `r n_effect_past` of the 1000 groups from the effect world passed the cutoffs. Steves really are 5 cm taller in this world, yet a study of 10 Steves found that difference only about `r round(100 * n_effect_past / 1000)`% of the time, and missed it the rest of the time. A real 5 cm difference is missed about half the time.
-
-Alpha and beta play off each other through the cutoffs. Move the cutoffs outwards (a smaller alpha) and fewer null groups pass them, but fewer effect groups pass them too, so beta goes up and power goes down.
+- define: **alpha** = share of null groups past cutoff (Type I rate, chosen 5%)
+- define: **beta** = share of effect groups *not* past cutoff (Type II rate)
+- define: **power** = share of effect groups past cutoff; power is $1 - \beta$
+- point out: only `r n_effect_past` of 1000 effect-world groups passed; found about `r round(100 * n_effect_past / 1000)`% of the time; real 5 cm difference missed about half the time
+- alpha vs beta trade off via cutoffs: smaller alpha -> cutoffs out -> fewer null and fewer effect groups pass -> beta up, power down
 
 ## Watch It Build
 
-The widget now has both worlds. Blue groups come from the null world, where Steves are average, and orange groups come from the effect world, where they are taller.
+- widget now has both worlds: blue = null (average Steves), orange = effect (taller)
 
 <iframe class="demyst-widget" src="apps/nhst/embed.html?n=10&null=175&sd=7&mean=180&unit=cm" width="100%" height="960" title="Null and true-effect t distributions interactive widget" style="border: 0;"></iframe>
 
@@ -204,16 +209,17 @@ window.addEventListener("message", function (event) {
 });
 </script>
 
-1. Click **Null +1000** to build the null distribution. Then click **True +1** a few times and watch where each group of taller Steves lands.
-2. Click **True +1000**. Where do the two histograms overlap? Bars past the cutoffs are solid.
-3. Switch **Show t-values as** to **Dots**. Every group is now a dot, and the table below counts the solid and faded dots in each world: the same four cells as the table above.
-4. Change the **True mean** to make Steves taller or shorter (the d next to it updates). Each change clears the plot, so build both worlds again. What happens to the share of orange dots past the cutoffs?
-5. Change the **Sample size** and build both worlds again. What happens to the orange t-values when the groups are bigger?
-6. Change **Alpha** to .01 without rebuilding. The cutoffs move outwards over the same t-values: fewer null dots pass them, but fewer orange dots do too.
+1. **Null +1000**, then **True +1** a few times: where do taller-Steve groups land?
+2. **True +1000**: where do the histograms overlap? bars past cutoffs solid
+3. **Show t-values as** -> **Dots**: table counts solid/faded per world, same four cells as above
+4. change **True mean** (d updates; plot clears, rebuild both): share of orange dots past cutoffs?
+5. change **Sample size**, rebuild: what happens to orange t-values with bigger groups?
+6. **Alpha** -> .01, no rebuild: cutoffs move out; fewer null dots pass, fewer orange too
 
 ## Your Turn: Write `my_effect_t()`
 
-Now build the pieces yourself. `my_effect_t()` is `my_null_t()` from Chapter \@ref(null-distributions) with one change: the population mean and the comparison value are separate inputs, so they can be different. It does what the `effect_ts` line in Build Both Distributions did.
+- = `my_null_t()` from Chapter \@ref(null-distributions) with one change: population mean and comparison value are separate inputs
+- does what the `effect_ts` line in Build Both Distributions did
 
 ```{r my-effect-t-exercise, eval=FALSE}
 my_effect_t <- function(n, pop_mean, pop_sd, comparison_value) {
@@ -256,11 +262,11 @@ c(mine = mine, R = r_version)
 all.equal(mine, r_version)
 ```
 
-If you set `pop_mean` equal to `comparison_value`, `my_effect_t()` does exactly what `my_null_t()` does. The null world is just the effect world with an effect of zero.
+- point out: `pop_mean` = `comparison_value` gives `my_null_t()`; null world = effect world with effect zero
 
 ## Your Turn: Write `my_power()`
 
-Power is the proportion of t-values past the cutoffs. That is one comparison and one mean:
+- power = proportion of t-values past cutoffs: one comparison, one mean
 
 ```{r my-power-exercise, eval=FALSE}
 my_power <- function(ts, cutoffs) {
@@ -288,17 +294,18 @@ my_power(effect_ts, cutoffs)
 ```
 `r unhide()`
 
-Try it on the null t-values too:
+- try on null t-values too:
 
 ```{r power-on-null}
 my_power(null_ts, cutoffs)
 ```
 
-The same function gives 0.05. "Power" in a world with no effect is just the Type I error rate.
+- gives 0.05: "power" with no effect = Type I error rate
 
 ## Check It: Close Enough
 
-R's `power.t.test()` and the `pwr` package's `pwr.t.test()` both calculate power exactly from the t distribution. `power.t.test()` takes the raw difference (`delta`, here 5 cm) and the SD; `pwr.t.test()` takes Cohen's d.
+- `power.t.test()` (base R) and `pwr.t.test()` (`pwr`) compute exact power from the t distribution
+- `power.t.test()` takes raw difference (`delta` = 5 cm) and SD; `pwr.t.test()` takes Cohen's d
 
 ```{r power-check}
 c(
@@ -314,23 +321,25 @@ abs(
 ) < 0.12
 ```
 
-Your simulated power is within 0.12 of the exact answer. We allow a bigger gap than for the p-values in Chapter \@ref(p-values) because two things wobble here: the cutoffs come from one simulation and the effect t-values from another.
+- within 0.12 of exact; bigger allowance than p-values in Chapter \@ref(p-values) because two things wobble (cutoffs from one simulation, effect t-values from another)
 
 ```{r exact-power, echo=FALSE}
 exact_power <- pwr.t.test(n = 10, d = 5 / 7, type = "one.sample")$power
 ```
 
-With groups of 10 and a real difference of 5 cm (d = `r round(5 / 7, 2)`), the exact power is `r round(exact_power, 2)`. A study like this finds the difference about `r round(100 * exact_power)`% of the time and misses it about `r round(100 * (1 - exact_power))`% of the time: roughly a coin toss, even though Steves really are taller.
+- n = 10, 5 cm difference (d = `r round(5 / 7, 2)`): exact power `r round(exact_power, 2)`
+- found about `r round(100 * exact_power)`% of the time, missed about `r round(100 * (1 - exact_power))`%: roughly a coin toss, though Steves really are taller
 
 ## Your Turn: Write `my_cohens_d()`
 
-In A World With An Effect, d used the true mean and the true SD of the population. With real data we only have a sample, so we use the sample mean and the sample SD instead:
+- A World With An Effect used true mean and SD; with real data use sample mean and sample SD:
 
 $$
 d = \frac{\bar{x} - \mu_0}{s}
 $$
 
-This looks a lot like the t-statistic, but the bottom of the fraction is the standard deviation, not the standard error. The t-value asks how far the mean is from the comparison value compared with the *noise in the mean*. Cohen's d asks how far it is compared with the *spread of individual values*.
+- compare with t: bottom is SD, not SE
+- t: distance relative to *noise in the mean*; d: relative to *spread of individual values*
 
 ```{r my-cohens-d-exercise, eval=FALSE}
 my_cohens_d <- function(x, comparison_value) {
@@ -362,13 +371,13 @@ my_cohens_d(scores, comparison_value = 46)
 
 ## Check It: d And t
 
-Base R does not have a Cohen's d function, but there is an exact link we can check. The standard error is the SD divided by $\sqrt{n}$, so the t-value is just d multiplied by $\sqrt{n}$:
+- no base R Cohen's d, but exact link to check: SE = SD / $\sqrt{n}$, so t = d times $\sqrt{n}$
 
 $$
 t = d \times \sqrt{n}
 $$
 
-Write the right-hand side in code for our scores against 46, then compare it with `my_t_value()`:
+- code the right-hand side for scores vs 46, compare with `my_t_value()`
 
 ```{r my-cohens-d-check-exercise, eval=FALSE}
 d_times_root_n <-
@@ -388,9 +397,9 @@ all.equal(d_times_root_n, my_t_value(scores, 46))
 ```
 `r unhide()`
 
-For the same effect size, a bigger sample gives a bigger t-value, so it is more likely to pass the cutoff. That is why the groups of 10 Steves so often missed a real 5 cm difference: with d = `r round(5 / 7, 2)` and n = 10, the effect world's t-values centre around `r round(5 / 7 * sqrt(10), 1)`, right next to the upper cutoff.
-
-Our ten scores are `r round(my_cohens_d(scores, 46), 2)` SDs above 46. By the usual rules of thumb, a d of 0.2 is small, 0.5 is medium, and 0.8 is large.
+- same effect size, bigger sample -> bigger t -> more likely past cutoff
+- why groups of 10 Steves often missed: d = `r round(5 / 7, 2)`, n = 10, effect t-values centre around `r round(5 / 7 * sqrt(10), 1)`, right next to the upper cutoff
+- our scores: `r round(my_cohens_d(scores, 46), 2)` SDs above 46 (rules of thumb: 0.2 small, 0.5 medium, 0.8 large)
 
 ## Add To Your Toolbox
 
@@ -466,4 +475,5 @@ You should see three `TRUE`s:
 null t-values -> cutoffs -> effect t-values -> count what passes -> power
 </div>
 
-Everything in Part II has worked on t-values. Any statistic you can turn into a t-value, like the correlation in Chapter \@ref(correlation), can go through the same steps. If you came here early, Part I is waiting with more test statistics to build.
+- all of Part II worked on t-values; any statistic turned into t (e.g. correlation, Chapter \@ref(correlation)) goes through the same steps
+- if came here early: Part I has more test statistics to build

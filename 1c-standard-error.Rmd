@@ -1,20 +1,19 @@
 # Spread and Standard Error {#standard-error}
 
+<div class="draft">Work in progress.</div>
+
 ## Reusing The Same Pieces
 
-In the last chapter, we built variance by taking an equation and turning it into a set of small R steps.
-
-That same idea works for lots of summary statistics. We will use the mean, variance, and standard deviation to build towards standard error.
-
-The path is:
+- recap: last chapter turned the variance equation into small R steps
+- same approach here: mean, variance, SD, then build to SE
+- the path:
 
 ```text
 values -> mean -> variance -> standard deviation -> standard error
 ```
 
-Standard deviation describes how spread out the values are. Standard error describes how much a mean would vary across repeated samples.
-
-We will use the same ten values as in the last chapter, so the mean is still 50:
+- SD = spread of the values; SE = how much a mean would vary across repeated samples
+- same ten values as last chapter, mean still 50
 
 ```{r values}
 x <- c(44, 47, 48, 49, 50, 50, 51, 52, 53, 56)
@@ -23,15 +22,15 @@ x
 
 ## Files For This Chapter
 
-Download the exercise file for this chapter and save it in the same folder as your `my_functions.R`:
+- download exercise file, save next to `my_functions.R`:
 
 - <a href="exercises/1c-standard-error-exercises.Rmd" download>1c-standard-error-exercises.Rmd</a>
 
-If you do not have `my_functions.R` yet, go back to the start of the last chapter and download it from there.
+- no `my_functions.R` yet? get it from the start of the last chapter
 
 ## Load Your Toolbox
 
-In the last chapter you built `my_mean()` and `my_var()` and saved them in `my_functions.R`. Instead of typing them out again, load them:
+- `my_mean()` and `my_var()` are saved in `my_functions.R`; load rather than retype:
 
 ```{r load-toolbox-student, eval=FALSE}
 library(tidyverse)
@@ -42,7 +41,7 @@ source("my_functions.R")
 source("R/functions.R")
 ```
 
-`source()` runs every line of code in a file. Your file only contains functions, so running it creates those functions, ready to use.
+- explain: `source()` runs every line in the file, so the functions get created
 
 Before building on them, check that they still match R:
 
@@ -55,7 +54,7 @@ Two `TRUE`s and you are ready. If you see `could not find function`, check that 
 
 ## Your Turn: Write `my_sd()`
 
-Standard deviation is the square root of variance. That is one step, and you already have a function that calculates variance.
+- SD = square root of variance; one step on top of `my_var()`
 
 ```{r my-sd-exercise, eval=FALSE}
 my_sd <- function(x) {
@@ -81,18 +80,18 @@ my_sd(x)
 ```
 `r unhide()`
 
-The function is short because `my_var()` already does most of the work. Once you have checked a small function, you can build other functions on top of it.
+- point out: short because `my_var()` does the work; checked functions can be built on
 
 ## Check It Against `sd()`
 
-Same two-part check as before: print both answers, then compare them with `all.equal()`.
+- same two-part check: print both, then `all.equal()`
 
 ```{r my-sd-check}
 c(mine = my_sd(x), R = sd(x))
 all.equal(my_sd(x), sd(x))
 ```
 
-And on a second set of values:
+- second set of values:
 
 ```{r my-sd-check-2}
 c(mine = my_sd(c(2, 4, 9)), R = sd(c(2, 4, 9)))
@@ -101,29 +100,21 @@ all.equal(my_sd(c(2, 4, 9)), sd(c(2, 4, 9)))
 
 ## Standard Error
 
-Standard deviation describes the spread of values in a sample.
-
-Standard error describes the spread of sample means.
-
-That is a different kind of spread. Instead of asking how much individual scores vary, we ask how much the mean would vary if we repeated the sampling process. We will see this happen later in the chapter.
-
-The standard error is:
+- SD = spread of values in a sample; SE = spread of sample means
+- different kind of spread: how much the mean would vary if sampling repeated (shown later in chapter)
+- formula:
 
 $$
 SE = \frac{s}{\sqrt{n}}
 $$
 
-where $s$ is the sample standard deviation and $n$ is the number of values. In words: work out the standard deviation, then divide it by the square root of the sample size.
+- $s$ = sample SD, $n$ = number of values; in words: SD divided by square root of sample size
 
 What does $\sqrt{n}$ mean here? `r mcq(c("the square root of the variance", answer = "the square root of the sample size", "the square root of the mean"))`
 
 ## Your Turn: Write `my_se()`
 
-The recipe is:
-
-1. count the values;
-2. calculate the standard deviation, using your own `my_sd()`;
-3. divide the standard deviation by the square root of the count.
+- recipe: count values; SD with `my_sd()`; divide SD by square root of count
 
 ```{r my-se-exercise, eval=FALSE}
 my_se <- function(x) {
@@ -155,7 +146,7 @@ my_se(x)
 
 ## Check It Against R
 
-R does not have a function just for the standard error, but `t.test()` calculates one as part of its working. It keeps it in its results under the name `stderr`, and `$` pulls it out:
+- no base R SE function; `t.test()` computes one, stored as `stderr`, pull out with `$`
 
 ```{r my-se-check}
 c(mine = my_se(x), R = t.test(x)$stderr)
@@ -167,13 +158,12 @@ c(mine = my_se(c(2, 4, 9)), R = t.test(c(2, 4, 9))$stderr)
 all.equal(my_se(c(2, 4, 9)), t.test(c(2, 4, 9))$stderr)
 ```
 
-Your `my_se()` reproduces the standard error inside `t.test()`. We will meet the rest of `t.test()` in the next chapter.
+- note: rest of `t.test()` comes next chapter
 
 ## Seeing Standard Error
 
-We can use simulation to see why standard error is about sample means.
-
-First, imagine a large population of scores.
+- use simulation to show SE is about sample means
+- first: a large population of scores (mean 50, SD 10)
 
 ```{r population-scores}
 population_scores <- rnorm(n = 10000, mean = 50, sd = 10)
@@ -187,37 +177,31 @@ population_summary <- tibble(score = population_scores) %>%
 population_summary
 ```
 
-The population has lots of individual values. We can draw one sample and calculate one sample mean.
+- draw one sample of 20, get one sample mean
 
 ```{r one-sample-mean}
 one_sample <- sample(population_scores, size = 20)
 my_mean(one_sample)
 ```
 
-Run that chunk a few times. You get a different sample mean each time, because each sample contains different people.
+- try: rerun chunk; different mean each time (different people in each sample)
 
 ## Watch The Sampling Process
 
-The widget below builds a distribution of sample means one sample at a time. It uses the same population as the code above: a mean of 50 and an SD of 10. Each time you add a sample, it:
-
-1. draws a sample of people from the population (the blue dots in the top panel);
-2. calculates the mean of that sample (the orange line);
-3. drops that mean into the bottom panel, which keeps every sample mean so far.
+- widget builds distribution of sample means one sample at a time; same population (mean 50, SD 10)
+- each sample: draw people (blue dots, top panel); compute mean (orange line); drop mean into bottom panel
 
 <iframe src="apps/sampling/embed.html" width="100%" height="720" title="Sampling distribution interactive widget" style="border: 0;"></iframe>
 
-Try this sequence:
-
-1. Click **+1** a few times. Watch where each sample mean lands. Most land near 50, but not exactly on it.
-2. Click **+10** a few times, then **+100**. Notice the shape building up in the bottom panel: lots of means close to 50, and fewer the further you go from it.
-3. Compare the bottom panel with the population in the top panel. Both use the same x-axis. The sample means are much less spread out than the individual values.
-4. Look at **SD of the means**. That is the standard error, estimated by simulation. Compare it with **Formula SE**, which is the population SD divided by $\sqrt{n}$. The more samples you add, the closer they get.
-5. Click **Reset**, set the sample size to 5, and add a few hundred samples. Then try 50. Before each run, predict whether the bottom panel will be wider or narrower.
-6. Tick **Expected shape** to see the distribution that the formula predicts.
-
-Every click of **+1** does what `one_sample_mean(n = 20)` does below: one sample, one mean. Clicking **+100** is like `replicate(100, one_sample_mean(n = 20))`. The **SD of the means** box is `my_sd()` of all the means collected so far.
-
-If we repeat that process many times in code, we get many sample means.
+- things to try:
+  - **+1** a few times: most means land near 50, not exactly on it
+  - **+10**, then **+100**: shape builds up, most means near 50
+  - compare bottom vs top panel (same x-axis): means much less spread than individual values
+  - **SD of the means** = simulated SE; compare with **Formula SE** (population SD / $\sqrt{n}$); converge with more samples
+  - **Reset**, n = 5, few hundred samples; then n = 50; predict wider or narrower first
+  - tick **Expected shape** to see formula's predicted distribution
+- link to code: **+1** = `one_sample_mean(n = 20)` below; **+100** = `replicate(100, one_sample_mean(n = 20))`; **SD of the means** = `my_sd()` of the means so far
+- repeat in code to get many sample means:
 
 ```{r sample-mean-function}
 one_sample_mean <- function(n) {
@@ -228,7 +212,7 @@ one_sample_mean <- function(n) {
 sample_means_20 <- replicate(1000, one_sample_mean(n = 20))
 ```
 
-Now we can plot the distribution of those sample means.
+- plot the distribution of sample means
 
 ```{r sample-means-visual, fig.cap="A sampling distribution of sample means.", echo=FALSE}
 sample_mean_data <- tibble(mean_score = sample_means_20)
@@ -247,7 +231,7 @@ ggplot(sample_mean_data, aes(x = mean_score)) +
 ```{r sample-means-visual-code, ref.label="sample-means-visual", eval=FALSE, webex.hide="Show the plot code"}
 ```
 
-The x-axis is now sample means, not individual scores. The spread of this distribution is the standard error.
+- point out: x-axis is now sample means, not scores; spread of this = SE
 
 ```{r simulated-standard-error}
 c(
@@ -256,11 +240,11 @@ c(
 )
 ```
 
-`simulated` estimates the standard error from the sample means we just made. `formula` calculates it from the population SD and the sample size.
+- `simulated` = SE from the sample means; `formula` = population SD / sqrt(20)
 
 ## Sample Size And Standard Error
 
-Larger samples give less variable sample means.
+- larger samples, less variable means
 
 ```{r sample-size-comparison}
 sample_means_10 <- replicate(1000, one_sample_mean(n = 10))
@@ -286,9 +270,8 @@ ggplot(sample_size_data, aes(x = mean_score, fill = sample_size)) +
 ```{r sample-size-visual-code, ref.label="sample-size-visual", eval=FALSE, webex.hide="Show the plot code"}
 ```
 
-The `n = 50` distribution is narrower because larger samples give more stable means.
-
-That is why `n` sits in the denominator of the standard error formula:
+- point out: `n = 50` curve narrower (more stable means)
+- so `n` is in the denominator:
 
 ```text
 SE = SD / sqrt(n)
@@ -296,9 +279,8 @@ SE = SD / sqrt(n)
 
 ## Your Turn: Write `my_summary()`
 
-A function can also return several related values at once. Write `my_summary()`, which takes a set of values and returns a one-row table with five columns: the number of values, the mean, the variance, the standard deviation, and the standard error.
-
-`tibble()` makes the table. Each `name = value` pair inside it becomes one column.
+- functions can return several values; `my_summary()` returns one-row table: n, mean, variance, SD, SE
+- `tibble()`: each `name = value` pair = one column
 
 ```{r my-summary-exercise, eval=FALSE}
 my_summary <- function(x) {
@@ -338,7 +320,7 @@ my_summary(x)
 
 ## Check It Against R
 
-Build the same table with R's own functions, then compare the two. `bind_rows()` stacks the two one-row tables so you can read them side by side, and `.id = "version"` adds a column saying which row is which. `all.equal()` compares every column at once:
+- same table with R's functions; `bind_rows()` stacks rows, `.id = "version"` labels them; `all.equal()` compares all columns
 
 ```{r my-summary-check}
 r_summary <- tibble(
@@ -355,22 +337,12 @@ all.equal(my_summary(x), r_summary)
 
 What is the standard error of `x`, to two decimal places? `r fitb(round(sd(x) / sqrt(length(x)), 2))`
 
-This is a useful pattern for the rest of the resource:
-
-1. make a tiny function;
-2. check it against base R;
-3. reuse it inside the next function;
-4. keep the inputs and outputs clear.
+- pattern for the rest of the book: tiny function; check against base R; reuse in next function; clear inputs/outputs
 
 ## Your Turn: Write `my_z_score()`
 
-A z-score tells you how many standard deviations a value is above or below the mean. Make a function called `my_z_score()` that turns values into z-scores.
-
-The recipe is:
-
-1. calculate the mean;
-2. calculate the standard deviation;
-3. subtract the mean from each value, then divide by the standard deviation.
+- z-score = how many SDs a value is above/below the mean
+- recipe: mean; SD; subtract mean from each value, divide by SD
 
 ```{r z-score-exercise, eval=FALSE}
 my_z_score <- function(x) {
@@ -402,29 +374,31 @@ my_z_score(x)
 
 ## Check It Against `scale()`
 
-R's version is `scale()`. It returns its answer as a one-column table (a matrix), so `as.vector()` turns it back into a plain set of values before we compare:
+- R's version: `scale()`; returns a matrix, so `as.vector()` before comparing
 
 ```{r z-score-check}
 tibble(value = x, mine = my_z_score(x), R = as.vector(scale(x)))
 all.equal(my_z_score(x), as.vector(scale(x)))
 ```
 
-A value with a z-score of 0 is exactly at the mean. Which value in `x` has a z-score of 1.8? `r fitb(56)`
+- z = 0 means exactly at the mean
+
+Which value in `x` has a z-score of 1.8? `r fitb(56)`
 
 ## Try It On Real Data
 
-So far, every check has used numbers picked for this book. Real data make a good further test, because nobody chose the values to give tidy answers.
-
-R comes with a built-in dataset called `sleep`. It holds the results of a 1905 study in which 10 patients each tried two sleeping drugs, and William Gosset, writing as "Student", used it in 1908 in the paper that introduced the t-test. `extra` is how many more hours each patient slept on a drug than without it, and `group` says which drug.
-
-`filter()` keeps the rows for the first drug, and `pull()` takes the `extra` column out as a plain set of values:
+- real data as a further test (values not chosen to be tidy)
+- built-in `sleep` dataset: 1905 study, 10 patients, two sleeping drugs; used by Gosset ("Student") in 1908 t-test paper
+- `extra` = extra hours slept on drug; `group` = which drug
+- `filter()` keeps drug 1, `pull()` extracts `extra` as plain values
 
 ```{r real-data-ch3}
 drug_1 <- sleep %>% filter(group == 1) %>% pull(extra)
 drug_1
 ```
 
-Some patients slept less on the drug, which is why some values are negative. Now run all three of your new functions on it, and check each against R:
+- note: negative values = slept less on the drug
+- run all three new functions, check against R:
 
 ```{r real-data-ch3-check}
 all.equal(my_sd(drug_1), sd(drug_1))
@@ -432,7 +406,7 @@ all.equal(my_se(drug_1), t.test(drug_1)$stderr)
 all.equal(my_z_score(drug_1), as.vector(scale(drug_1)))
 ```
 
-Three `TRUE`s mean your functions match R's on real data too. We will keep using `sleep` this way in the chapters that follow.
+- three `TRUE`s = match on real data; `sleep` used again in later chapters
 
 ## Add To Your Toolbox
 
@@ -573,9 +547,8 @@ You should see six `TRUE`s:
 
 ## Where This Goes Next
 
-The same structure can be extended to specific statistical tests.
-
-For now, the important bit is the method:
+- same structure extends to specific tests
+- the method to take away:
 
 <div class="summary-box">
 Break the scary-looking thing into small functions, check each part, then put the pieces together.

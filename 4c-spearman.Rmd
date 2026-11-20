@@ -1,5 +1,8 @@
 # Spearman's Rho {#spearman}
 
-*This chapter has not been written yet.*
+<div class="draft">Work in progress.</div>
 
-The rank-based version of Pearson's correlation. Spearman's rho is Pearson's r calculated on the ranks, so your own `my_correlation()` can calculate it.
+*Not written yet.* Outline:
+
+- rank version of Pearson's r
+- = Pearson's r on the ranks, so `my_correlation()` works

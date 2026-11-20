@@ -1,8 +1,10 @@
 # p-values {#p-values}
 
-In Chapter \@ref(null-distributions), we built a world where Steves are exactly average, drew 1000 groups of 10 from it, and turned each group into a t-value. We found the cutoffs that leave the most extreme 5% of those null t-values outside, and saw that rare groups turn up even when nothing is going on.
+<div class="draft">Work in progress.</div>
 
-This chapter puts a number on "rare". If a t-value comes from the null world, the share of null t-values beyond a point is the probability of landing beyond it. Only 5% of the null t-values fall past the cutoffs, so a sample from the null world has a 5% probability of landing past them. The probability of a result at least as extreme as ours, if the null hypothesis is true, is called the **p-value**.
+- recap from Chapter \@ref(null-distributions): null world of average Steves, 1000 groups of 10, t-values, cutoffs leaving the most extreme 5% outside
+- this chapter: put a number on "rare"; share of null t-values beyond a point = probability of landing beyond it
+- define: **p-value** = probability of a result at least as extreme as ours, if the null hypothesis is true
 
 <div class="summary-box">
 null t-values -> share at least as extreme as ours -> p-value
@@ -11,18 +13,19 @@ null t-values -> share at least as extreme as ours -> p-value
 <div class="note">
 **What you need for this chapter**
 
-Chapter \@ref(null-distributions), and the chapters it needs. The last section of this chapter applies the same ideas to correlation: do it if you have done Chapter \@ref(correlation), and skip it if not.
+- Chapter \@ref(null-distributions) and what it needs
+- last section (correlation) needs Chapter \@ref(correlation); skip if not done
 </div>
 
 ## Files For This Chapter
 
-Download the exercise file for this chapter and save it in the same folder as your `my_functions.R`:
+- download the exercise file, save next to `my_functions.R`:
 
 - <a href="exercises/2b-p-values-exercises.Rmd" download>2b-p-values-exercises.Rmd</a>
 
 ## Load Your Toolbox
 
-We will need the ten scores from Chapter \@ref(t-statistic) later on:
+- the ten scores from Chapter \@ref(t-statistic), needed later
 
 ```{r score-data}
 scores <- c(44, 47, 48, 49, 50, 50, 51, 52, 53, 56)
@@ -53,7 +56,7 @@ all.equal(mine, r_version)
 all.equal(my_cutoffs(20:1, alpha = 0.1), c(2, 19))
 ```
 
-Then recreate `null_ts` from Chapter \@ref(null-distributions): 1000 null t-values from groups of 10 Steves.
+- recreate `null_ts` from Chapter \@ref(null-distributions): 1000 null t-values, groups of 10 Steves
 
 ```{r null-ts}
 null_ts <- replicate(1000, my_null_t(n = 10, pop_mean = 175, pop_sd = 7))
@@ -61,13 +64,16 @@ null_ts <- replicate(1000, my_null_t(n = 10, pop_mean = 175, pop_sd = 7))
 
 ## Alpha And Type I Errors
 
-Every one of the 1000 t-values in `null_ts` came from a world where the null hypothesis is true: Steves really are exactly average. Say we used the cutoffs that mark the rarest 5%, `my_cutoffs(null_ts)`, to decide whether Steves are taller or shorter than average. We would wrongly call the result "far" for the 5% of samples that land past them. That kind of mistake is called a **Type I error**.
-
-In the last chapter, alpha was the share of null values we marked as rare. Here is what that share means for a test: **alpha** is the probability of calling a result "far" when nothing is going on. With alpha = .05, 5% of samples from the null world land past the cutoffs, so a test that uses them makes a Type I error 5% of the time when the null hypothesis is true.
+- all 1000 `null_ts` come from a world where the null is true
+- using `my_cutoffs(null_ts)` to call results "far": wrong for the 5% past them
+- define: **Type I error** = calling a result "far" when nothing is going on
+- last chapter alpha = share of null values marked rare; now: **alpha** = probability of a Type I error
+- alpha = .05: test makes a Type I error 5% of the time when the null is true
 
 ## Watch It Build
 
-You built this null distribution yourself in Chapter \@ref(null-distributions). The widget below is its testing view: the same groups of 10 Steves and the same t-values, now with the cutoffs drawn in and a table counting how often samples land past them. It uses the exact cutoffs from the t distribution, which you will meet later in this chapter.
+- widget = testing view of the null distribution built in Chapter \@ref(null-distributions): same groups of 10 Steves, cutoffs drawn, table counting samples past them
+- note: uses exact t-distribution cutoffs (met later in chapter)
 
 <iframe class="demyst-widget" src="apps/nhst/embed.html?mode=null&n=10&null=175&sd=7&unit=cm" width="100%" height="760" title="Null distribution of t interactive widget" style="border: 0;"></iframe>
 
@@ -83,21 +89,19 @@ window.addEventListener("message", function (event) {
 });
 </script>
 
-1. Click **+1** a few times, then **+1000**. Watch the share of null t-values past the cutoffs in the table: it settles near alpha, 5%. That is the Type I error rate.
-2. Switch **Show t-values as** to **Dots**. The solid dots are the samples that would be wrongly called "far".
-3. Change **Alpha** to .01 without adding samples. The cutoffs move outwards over the same t-values, and fewer of them are past the cutoffs.
-4. Change the sample size and build it again. With very small samples, the tails get fatter, so the cutoffs move further out.
+1. **+1** a few times, then **+1000**: share past cutoffs settles near alpha, 5% (= Type I error rate)
+2. **Show t-values as** -> **Dots**: solid dots = samples wrongly called "far"
+3. **Alpha** -> .01, no new samples: cutoffs move out, fewer past them
+4. change sample size, rebuild: very small samples -> fatter tails -> cutoffs further out
 
 ## Your Turn: Write `my_sim_p_value()`
 
-Now we can answer the question from the start of Chapter \@ref(null-distributions): how far is far enough? A **p-value** is the proportion of the null distribution that is at least as far from zero as our t-value.
-
-The recipe is:
-
-1. for every null t-value, ask whether it is at least as far from zero as ours: `abs(null_ts) >= abs(t)`;
-2. take the proportion of `TRUE`s.
-
-The proportion of `TRUE`s is the mean of a set of `TRUE` and `FALSE` values, because R counts `TRUE` as 1 and `FALSE` as 0. So your own `my_mean()` does the job.
+- answers "how far is far enough?" from Chapter \@ref(null-distributions)
+- define: **p-value** = proportion of null distribution at least as far from zero as our t-value
+- recipe:
+  1. for each null t-value: `abs(null_ts) >= abs(t)`
+  2. proportion of `TRUE`s
+- note: proportion of `TRUE`s = mean of TRUE/FALSE (TRUE = 1, FALSE = 0), so `my_mean()` does it
 
 ```{r my-sim-p-value-exercise, eval=FALSE}
 my_sim_p_value <- function(t, null_ts) {
@@ -125,13 +129,14 @@ my_sim_p_value(t = 0.95, null_ts = null_ts)
 ```
 `r unhide()`
 
-`abs()` means both tails count: a t-value of -3 is just as far from zero as 3. This is a **two-sided** p-value.
+- `abs()`: both tails count (-3 as far out as 3); define: **two-sided** p-value
 
 ## Check It: Close Enough
 
-So far the null world has been Steves. For the p-values, we go back to the ten scores from Chapter \@ref(t-statistic) and their two comparison values, 49 and 46. The null t-values from the Steve world still work for them: under the null hypothesis, the distribution of t depends only on the sample size, not on the mean or SD, so any sample of 10 has the same null distribution.
-
-Use `my_sim_p_value()` on the scores against the first comparison value, 49, and compare with the p-value from `t.test()`. A simulated p-value comes from 1000 random samples, so it wobbles a little around the exact one, just like a sample mean wobbles around the population mean. That means `all.equal()` would say `FALSE` even when your function is correct. For simulations, we check that the gap is small instead: `abs()` turns the gap into a positive distance, and `< 0.05` asks whether it is smaller than 0.05.
+- back to the ten scores from Chapter \@ref(t-statistic), comparison values 49 and 46
+- Steve null t-values still work: under the null, distribution of t depends only on sample size, not mean or SD
+- simulated p wobbles around the exact one (1000 samples), so `all.equal()` would fail
+- instead check gap small: `abs(...) < 0.05`
 
 ```{r sim-p-check}
 t_49 <- my_t_value(scores, comparison_value = 49)
@@ -143,7 +148,7 @@ c(
 abs(my_sim_p_value(t_49, null_ts) - t.test(scores, mu = 49)$p.value) < 0.05
 ```
 
-Now the second comparison value, 46:
+- now 46:
 
 ```{r sim-p-check-46}
 t_46 <- my_t_value(scores, comparison_value = 46)
@@ -155,11 +160,12 @@ c(
 abs(my_sim_p_value(t_46, null_ts) - t.test(scores, mu = 46)$p.value) < 0.05
 ```
 
-A `TRUE` each time means your simulated p-values are within 0.05 of the exact ones. You worked out a p-value by building the null distribution yourself.
+- `TRUE` each time = within 0.05 of exact; p-value worked out from a null distribution built by hand
 
 ## From Simulation To The t Distribution
 
-If we simulated more and more samples, the histogram would get smoother and smoother. With endlessly many, it would become a smooth curve: the **t distribution**. Its exact shape depends only on the degrees of freedom.
+- more and more samples -> smoother histogram -> smooth curve = **t distribution**
+- shape depends only on degrees of freedom
 
 ```{r t-curve, fig.cap="The simulated null t-values with the exact t distribution for 9 degrees of freedom drawn over them.", fig.alt="Histogram of simulated t-values with a smooth t distribution curve following its shape closely.", echo=FALSE}
 curve_data <- tibble(t = seq(-6, 6, 0.05)) %>%
@@ -178,16 +184,16 @@ ggplot(tibble(t = null_ts), aes(x = t)) +
 ```{r t-curve-code, ref.label="t-curve", eval=FALSE, webex.hide="Show the plot code"}
 ```
 
-Because R knows that curve exactly, it does not need to simulate. `pt()` gives the area of the t distribution *below* a value. For example, `pt(-2, df = 9)` is the proportion of t-values below -2. We will use `pt()` the way we used `sum()`: it is the one piece that would take far more than a chapter to build by hand.
+- R knows the curve exactly, so no simulation needed
+- `pt()` = area *below* a value, e.g. `pt(-2, df = 9)` = proportion of t-values below -2
+- treat `pt()` like `sum()`: the one piece too big to build by hand here
 
 ## Your Turn: Write `my_p_value()`
 
-The recipe is:
-
-1. find the area in the lower tail, beyond the negative version of our t-value: `pt(-abs(t), df)`;
-2. double it, because a two-sided test counts both tails.
-
-`-abs(t)` is always negative, so the same code works whether our t-value is above or below zero.
+- recipe:
+  1. lower-tail area beyond negative version of our t: `pt(-abs(t), df)`
+  2. double it (two-sided)
+- `-abs(t)` always negative, so works for t above or below zero
 
 ```{r my-p-value-exercise, eval=FALSE}
 my_p_value <- function(t, df) {
@@ -217,7 +223,7 @@ my_p_value(t = 0.95, df = 9)
 
 ## Check It Against `t.test()`
 
-This time there is no simulation, so we expect an exact match:
+- no simulation now, so expect exact match
 
 ```{r my-p-value-check}
 c(mine = my_p_value(t_49, df = 9), R = t.test(scores, mu = 49)$p.value)
@@ -240,24 +246,24 @@ sim_46 <- my_sim_p_value(t_46, null_ts)
 | 49 | `r round(t_49, 2)` | `r round(sim_49, 3)` | `r round(p_49, 3)` | No |
 | 46 | `r round(t_46, 2)` | `r round(sim_46, 3)` | `r round(p_46, 3)` | Yes |
 
-Against 49, a t-value as far from zero as ours turns up in about `r round(100 * p_49)`% of samples even when the null is true. That is not unusual, so we would not reject the null hypothesis. That does not show that the population mean is exactly 49. It only means our data are quite compatible with it.
-
-Against 46, a t-value that far out turns up in less than 1% of samples when the null is true. That is unusual enough to pass the cutoff, so we would reject the null hypothesis that the population mean is 46.
-
-Two warnings:
-
-- the p-value is **not** the probability that the null hypothesis is true. It is the probability of a result at least this extreme, *if* the null hypothesis were true;
-- the exact p-value from `t.test()` assumes independent observations from a normal population. Our simulation made the same assumption when it used `rnorm()`.
+- against 49: t this far out in about `r round(100 * p_49)`% of null samples; not unusual, do not reject
+  - does not show mean is exactly 49, only that data are compatible with it
+- against 46: under 1% of null samples; past cutoff, reject null that mean is 46
+- warnings:
+  - p-value is **not** P(null is true); it is P(result this extreme | null true)
+  - exact p from `t.test()` assumes independent observations from a normal population; simulation assumed the same via `rnorm()`
 
 Which statement describes a p-value of .004? `r mcq(c("There is a 0.4% chance that the null hypothesis is true", answer = "If the null hypothesis were true, a t-value at least this extreme would turn up in about 0.4% of samples", "There is a 99.6% chance that there is a real difference"))`
 
 ## The t-Value As An Anchor
 
-Everything in this chapter worked on a t-value. Many statistics can be turned into a t-value, so the same tools work for them too. If you have done Chapter \@ref(correlation), the bonus section at the end of this chapter turns a correlation into a t-value and uses these same tools on it.
+- everything here worked on a t-value; many statistics can be turned into one, so same tools apply
+- bonus section: correlation -> t-value (needs Chapter \@ref(correlation))
 
 ## Try It On Real Data
 
-Back to the `sleep` data. In Chapter \@ref(t-statistic), the first drug's mean extra sleep was about 1.3 standard errors above 0. There are 10 patients, so we can reuse `null_ts`, the null distribution we built from groups of 10:
+- `sleep` data: first drug's mean extra sleep about 1.3 SEs above 0 (Chapter \@ref(t-statistic))
+- 10 patients, so reuse `null_ts`
 
 ```{r real-data-p}
 drug_1 <- sleep %>% filter(group == 1) %>% pull(extra)
@@ -273,15 +279,15 @@ abs(my_sim_p_value(drug_t, null_ts) - t.test(drug_1, mu = 0)$p.value) < 0.05
 all.equal(my_p_value(drug_t, df = 9), t.test(drug_1, mu = 0)$p.value)
 ```
 
-`null_ts` came from Steves' heights, with a mean of 175 cm and an SD of 7 cm, nothing like hours of sleep. This is fine, because under the null hypothesis, the distribution of t depends only on the sample size, not on the mean or SD of the values.
-
-A p-value of about `r round(my_p_value(drug_t, df = 9), 2)` is not past the cutoff at alpha .05, so we would not reject the null hypothesis that the first drug adds no sleep on average. That does not show the drug has no effect: with only 10 patients, a modest effect could easily be missed. Chapter \@ref(effects-power) shows how often a real effect gets missed.
+- `null_ts` came from heights (mean 175, SD 7), not sleep; fine because null t depends only on sample size
+- p about `r round(my_p_value(drug_t, df = 9), 2)`: not past cutoff at .05, do not reject "no added sleep"
+- does not show no effect: 10 patients, modest effect easily missed; Chapter \@ref(effects-power) shows how often
 
 ## Bonus: Correlation
 
-This section needs Chapter \@ref(correlation). There we turned a correlation into a t-value, which means everything in this chapter works for it too. The question is the same: if there were no relationship at all, how unusual would a t-value like ours be?
-
-We will use the eight practice-time and test-score pairs from Chapter \@ref(correlation):
+- needs Chapter \@ref(correlation): correlation already turned into a t-value, so everything here applies
+- question: if no relationship, how unusual is our t?
+- data: eight practice-time / test-score pairs from Chapter \@ref(correlation)
 
 ```{r correlation-data}
 x <- c(1, 2, 3, 4, 5, 6, 7, 8)
@@ -289,14 +295,14 @@ y <- c(48, 55, 51, 62, 58, 70, 65, 71)
 correlation_result <- cor.test(x, y, method = "pearson")
 ```
 
-To build the null distribution, we need samples where the null hypothesis is true. We keep the practice hours as they are, and pair them with test scores drawn completely at random, so there is no relationship between the two. Correlation does not depend on the mean or SD of the scores, so `rnorm()` with its defaults (a mean of 0 and an SD of 1) is fine.
+- null samples: keep practice hours, pair with random scores (no relationship)
+- correlation does not depend on mean or SD of scores, so default `rnorm()` (mean 0, SD 1) is fine
 
 ### Your Turn: Write `my_null_correlation_t()`
 
-This works just like `my_null_t()`:
-
-1. draw random y values, one for each x value: `rnorm(length(x))`;
-2. calculate the correlation t-value with `my_correlation_t()`.
+- like `my_null_t()`:
+  1. random y, one per x: `rnorm(length(x))`
+  2. correlation t-value with `my_correlation_t()`
 
 ```{r my-null-correlation-t-exercise, eval=FALSE}
 my_null_correlation_t <- function(x) {
@@ -326,7 +332,7 @@ my_null_correlation_t(x)
 
 ### Check It Against R
 
-As before, `set.seed()` lets us repeat the same random numbers and compare with `cor.test()`:
+- `set.seed()` to repeat random numbers, compare with `cor.test()`
 
 ```{r my-null-correlation-t-check}
 set.seed(1)
@@ -341,7 +347,7 @@ all.equal(mine, r_version)
 
 ### The Null Distribution For Correlation
 
-Now repeat it 1000 times and use your tools from this chapter and the last on the result, without changing them:
+- repeat 1000 times; reuse tools from this chapter and last unchanged
 
 ```{r null-correlation-ts}
 null_correlation_ts <- replicate(1000, my_null_correlation_t(x))
@@ -354,7 +360,9 @@ tibble(
 )
 ```
 
-`quantile()` is R's own way of finding the value that a given proportion of the data falls below. `mine` and `quantile` agree closely without being identical, because `quantile()` blends two neighbouring sorted values and `my_cutoffs()` picks one. Both sit near the `theory` column, with a little more wobble. Check the gap:
+- `quantile()` = R's value below which a given proportion falls
+- `mine` vs `quantile`: close not identical (`quantile()` blends two neighbouring sorted values, `my_cutoffs()` picks one)
+- both near `theory`, with some wobble; check the gap:
 
 ```{r null-correlation-cutoffs-check}
 abs(
@@ -362,9 +370,9 @@ abs(
 ) < 0.6
 ```
 
-The cutoffs match a t distribution with $n - 2 = 6$ degrees of freedom, as the formula said they would. We allow a gap of up to 0.6 here. With only 8 pairs, the tails of the distribution are wide, so simulated cutoffs wobble a lot from one simulation to the next.
-
-Now the p-values. First by simulation, then exactly with `my_p_value()`:
+- cutoffs match t distribution with $n - 2 = 6$ df, as the formula said
+- why gap of 0.6: only 8 pairs, wide tails, simulated cutoffs wobble a lot
+- now p-values: simulated, then exact with `my_p_value()`
 
 ```{r correlation-p-check}
 our_t <- my_correlation_t(x, y)
@@ -381,19 +389,19 @@ abs(
 all.equal(my_p_value(our_t, df = length(x) - 2), correlation_result$p.value)
 ```
 
-Your `my_p_value()` was written for a one-sample t-test, but it reproduces the p-value from `cor.test()` exactly. That works because we turned r into a t-value first. Any statistic that can be turned into a t-value with the right degrees of freedom can get its p-value from the same tools.
+- point out: `my_p_value()` written for one-sample t, reproduces `cor.test()` exactly, because r was turned into t
+- any statistic turned into t with right df gets its p-value from the same tools
 
 ```{r correlation-p-values, echo=FALSE}
 correlation_p <- my_p_value(our_t, df = length(x) - 2)
 ```
 
-For our data, a t-value as far from zero as `r round(our_t, 2)` would turn up in about `r signif(100 * correlation_p, 2)`% of samples if there were no relationship. That is unusual enough to pass the cutoff at alpha .05, so we would reject the null hypothesis of no linear relationship in the population.
-
-A small p-value does not tell us whether practice caused the higher scores. These made-up observations also cannot establish anything about real students.
+- our t = `r round(our_t, 2)`: would turn up in about `r signif(100 * correlation_p, 2)`% of samples if no relationship; past cutoff at .05, reject no linear relationship
+- small p says nothing about practice causing higher scores; made-up data, nothing about real students
 
 ### On Real Data
 
-The extra sleep on the two drugs from Chapter \@ref(correlation):
+- extra sleep on the two drugs from Chapter \@ref(correlation)
 
 ```{r real-data-correlation-p}
 drug_1 <- sleep %>% filter(group == 1) %>% pull(extra)
@@ -471,4 +479,5 @@ You should see two `TRUE`s:
 null t-values -> cutoffs -> p-value
 </div>
 
-So far, every group of Steves came from a world where the null hypothesis was true. In the next chapter, we add a second world, where Steves really are taller, and use the same cutoffs to ask how often a study of 10 Steves spots the difference. That proportion is called **power**.
+- so far every group came from a null-true world
+- next chapter: second world where Steves really are taller; same cutoffs; how often does a study of 10 Steves spot it = **power**

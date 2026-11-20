@@ -1,5 +1,8 @@
 # Mann-Whitney U Test {#mann-whitney}
 
-*This chapter has not been written yet.*
+<div class="draft">Work in progress.</div>
 
-The rank-based version of the independent t-test, also called the Wilcoxon rank-sum test.
+*Not written yet.* Outline:
+
+- rank version of the independent t
+- also called Wilcoxon rank-sum
