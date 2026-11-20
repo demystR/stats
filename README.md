@@ -11,7 +11,7 @@ install.packages(c("bookdown", "webexercises", "tidyverse", "pwr"))
 bookdown::render_book("index.Rmd", "bookdown::bs4_book")
 ```
 
-The rendered HTML will be written to `docs/`.
+The rendered HTML will be written to `docs/`. That folder is not committed: on every push to `main`, GitHub Actions (`.github/workflows/deploy.yml`) builds the book and publishes it to GitHub Pages.
 
 ## Structure
 

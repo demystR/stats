@@ -4,14 +4,15 @@
 .Ruserdata
 .Rproj.user/
 
-# bookdown and knitr build output (docs/ is committed for GitHub Pages)
+# bookdown and knitr build output (the book is built and deployed by GitHub Actions)
+docs/
 _bookdown_files/
 demyst.rds
 figure/
 *_cache/
 demyst.tex
 render*.rds
-# knitr figure folders left at the top level (the copies in docs/ are kept)
+# knitr figure folders left at the top level
 /*_files/
 
 # OS files
