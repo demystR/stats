@@ -2,8 +2,6 @@
 
 <div class="draft">Work in progress.</div>
 
-*Not written yet.* Outline:
-
 - three or more groups at once
 - F from two variances: group means around overall mean vs values within groups
 - two groups: F = t squared (independent t)

@@ -1,8 +1,0 @@
-# Spearman's Rho {#spearman}
-
-<div class="draft">Work in progress.</div>
-
-*Not written yet.* Outline:
-
-- rank version of Pearson's r
-- = Pearson's r on the ranks, so `my_correlation()` works

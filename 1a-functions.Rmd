@@ -1,4 +1,4 @@
-# (PART) Building Test Statistics {-}
+# (PART) Basics and Summary Statistics {-}
 
 # What Are Functions? {#functions}
 

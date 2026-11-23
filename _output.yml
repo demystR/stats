@@ -6,12 +6,11 @@ bookdown::bs4_book:
     in_header: include/header.html
     after_body:
     - include/webex.js
-    - include/script.js
+    - include/demystR-footer.html
   css:
-  - include/psyteachr.css
+  - include/demystR.css
   - include/webex.css
-  - include/style.css
-  - demyst.css
+  - stats.css
   theme:
     primary: "#467AAC"
 bookdown::pdf_book:

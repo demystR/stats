@@ -34,7 +34,7 @@ ggplot(practice, aes(x = hours, y = score)) +
 
 - download exercise file, save next to `my_functions.R`:
 
-- <a href="exercises/1f-correlation-exercises.Rmd" download>1f-correlation-exercises.Rmd</a>
+- <a href="exercises/2c-correlation-exercises.Rmd" download>2c-correlation-exercises.Rmd</a>
 
 ## Load Your Toolbox
 
@@ -216,7 +216,7 @@ all.equal(my_covariance(a, b), cov(a, b))
 ```
 
 - note: needs same-length numeric vectors, at least two complete pairs, no NAs; keep rows paired (sorting one breaks pairing)
-- interpret: covariance positive, above-mean practice goes with above-mean score on balance
+- interpret: covariance positive, above-mean practice goes with above-mean score on balance; below one mean goes with below the other
 
 - try: same variable in both inputs
 
@@ -236,7 +236,7 @@ c(hours = my_covariance(x, y), minutes = my_covariance(x * 60, y))
 ```
 
 - same people, covariance 60 times larger
-- fix: divide by product of the two SDs
+- fix: divide by product of the two SDs, so strength no longer depends on the units
 
 $$
 r = \frac{s_{xy}}{s_x s_y}
@@ -246,7 +246,10 @@ $$
 
 ## Your Turn: Write `my_correlation()`
 
-- recipe: covariance via `my_covariance()`; each SD via `my_sd()`; divide covariance by product of SDs
+- recipe:
+  1. covariance via `my_covariance()`
+  2. SD of each variable via `my_sd()`
+  3. divide covariance by product of the two SDs
 
 ```{r my-correlation-exercise, eval=FALSE}
 my_correlation <- function(x, y) {
@@ -357,7 +360,10 @@ $$
 
 ## Your Turn: Write `my_correlation_t()`
 
-- recipe: r via `my_correlation()`; count pairs; r times sqrt of $(n - 2) / (1 - r^2)$
+- recipe:
+  1. r via `my_correlation()`
+  2. count the pairs
+  3. r times square root of $(n - 2) / (1 - r^2)$
 
 ```{r my-correlation-t-exercise, eval=FALSE}
 my_correlation_t <- function(x, y) {
@@ -408,7 +414,7 @@ all.equal(my_correlation_t(x, y), unname(correlation_result$statistic))
 ## Is It Significant?
 
 - `cor.test()` also gives a p-value
-- r becomes a t, so the one-sample p-value tools work too; see bonus correlation section in Chapter \@ref(p-values)
+- r becomes a t, so the one-sample p-value tools work too; see [p-values](https://demystr.github.io/nhst/p-values.html) in [Demystifying Null Hypothesis Testing](https://demystr.github.io/nhst/)
 - caution: correlation doesn't show practice caused higher scores; made-up data says nothing about real students
 
 ## Try It On Real Data
@@ -427,7 +433,8 @@ all.equal(my_correlation(drug_1, drug_2), cor(drug_1, drug_2))
 all.equal(my_correlation_t(drug_1, drug_2), unname(drug_result$statistic))
 ```
 
-- strongly positive: some patients respond more to both drugs
+- strongly positive: patients who slept a lot more on one drug tended to sleep a lot more on the other
+- so some patients respond more strongly to both drugs than others do
 - comes back in Chapter \@ref(two-sample-t), changes how we compare the drugs
 
 ## Add To Your Toolbox
@@ -443,7 +450,7 @@ The steps are the same as in Chapter \@ref(equations):
 3. Save the file.
 
 `r hide("Show what my_functions.R should look like now")`
-```{r my-functions-after-1f-correlation, eval=FALSE}
+```{r my-functions-after-2c-correlation, eval=FALSE}
 # My statistics functions
 #
 # Add each function you build to this file, under the heading of the
@@ -456,7 +463,7 @@ The steps are the same as in Chapter \@ref(equations):
 # Some functions return a tibble, so load the tidyverse before using them.
 
 
-# PART I: BUILDING TEST STATISTICS =========================================
+# PART I: BASICS AND SUMMARY STATISTICS ====================================
 
 
 # From Equations to Code ---------------------------------------------------
@@ -512,6 +519,9 @@ my_z_score <- function(x) {
 
 
 
+# PART II: INFERENTIAL TESTS ==============================================
+
+
 # The One-Sample t-Test ----------------------------------------------------
 my_t_value <- function(x, comparison_value) {
   mean_x <- my_mean(x)
@@ -552,25 +562,6 @@ my_correlation_t <- function(x, y) {
   output <- r * sqrt((n - 2) / (1 - r^2))
   return(output)
 }
-
-
-
-# PART II: TESTING BY SIMULATION ===========================================
-
-
-# Null Distributions -------------------------------------------------------
-# my_null_t() and my_cutoffs() go here
-
-
-
-# p-values -----------------------------------------------------------------
-# my_sim_p_value() and my_p_value() go here
-# (and my_null_correlation_t() if you did the correlation section)
-
-
-
-# Effects and Power --------------------------------------------------------
-# my_effect_t(), my_power() and my_cohens_d() go here
 ```
 `r unhide()`
 
@@ -600,4 +591,4 @@ You should see three `TRUE`s:
 ## Link Back And Next Step
 
 - variance: squared deviations from one mean; covariance: paired deviations from two means
-- covariance / two SDs = correlation; correlation to t, so Part II p-value and power tools work for it too
+- covariance / two SDs = correlation; correlation to t, so the p-value and power tools in the NHST book work for it too

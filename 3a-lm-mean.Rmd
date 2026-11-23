@@ -4,9 +4,7 @@
 
 <div class="draft">Work in progress.</div>
 
-*Not written yet.* Outline:
-
-- Parts I and II tests are all one model (GLM); this part rebuilds them with `lm()`
+- Part II tests are all one model (GLM); this part rebuilds them with `lm()`
 - simplest model: one number for everyone
 - `my_sse()`: SSE around a proposed centre, plot over centres
 - minimum at the mean (link: squared distances, Chapter \@ref(equations))

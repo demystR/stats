@@ -1,7 +1,0 @@
-# Friedman Test {#friedman}
-
-<div class="draft">Work in progress.</div>
-
-*Not written yet.* Outline:
-
-- rank version of repeated-measures ANOVA, 3+ conditions, same people

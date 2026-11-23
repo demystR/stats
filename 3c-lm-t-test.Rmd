@@ -2,8 +2,6 @@
 
 <div class="draft">Work in progress.</div>
 
-*Not written yet.* Outline:
-
 - independent t from Chapter \@ref(two-sample-t) with `lm()`
 - group coded 0/1: intercept = mean of group 0, slope = difference in means
 - slope t = pooled independent t

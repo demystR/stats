@@ -21,7 +21,7 @@ demystify/
   ...
 ```
 
-Everything sits side by side in the same folder, with no folders inside it. That matters because each exercise file loads your toolbox with `source("my_functions.R")`, and R looks for `my_functions.R` in the same folder as the exercise file.
+Everything sits side by side in the same folder, with no folders inside it, so that `source("my_functions.R")` in each exercise file can find your toolbox.
 
 ## Create The Project {-}
 
@@ -64,15 +64,12 @@ The exercise files are R Markdown files (`.Rmd`): text with chunks of R code in 
 
 ## Install The Packages {-}
 
-The book uses two packages:
+The book uses one package, **tidyverse**, for handling data and drawing plots, in every chapter.
 
-- **tidyverse**, for handling data and drawing plots, in every chapter;
-- **pwr**, for power calculations, in Chapter \@ref(effects-power).
-
-Install them once, by running this line in the RStudio **Console**:
+Install it once, by running this line in the RStudio **Console**:
 
 ```{r install-packages, eval=FALSE}
-install.packages(c("tidyverse", "pwr"))
+install.packages("tidyverse")
 ```
 
 You only need to install a package once on each computer. After that, each exercise file loads the packages it needs with `library()`. On a university computer, they may already be installed.

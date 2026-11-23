@@ -1,0 +1,31 @@
+/* Styles for this book only. The shared demystR theme is in include/demystR.css. */
+
+.formula-step {
+  border: 1px solid var(--dm-rule);
+  border-radius: 4px;
+  margin: 1rem 0;
+  padding: .75rem 1rem;
+}
+
+/* Chapters not written yet: shown in grey italics in the contents sidebar, using the
+   theme's soft ink colour. When a chapter is written, delete its line from this list. */
+.book-toc li a[href="two-sample-t.html"],
+.book-toc li a[href="one-way-anova.html"],
+.book-toc li a[href="factorial-anova.html"],
+.book-toc li a[href="lm-mean.html"],
+.book-toc li a[href="lm-correlation.html"],
+.book-toc li a[href="lm-t-test.html"],
+.book-toc li a[href="lm-one-way-anova.html"] {
+  color: var(--dm-ink-soft);
+  font-style: italic;
+}
+
+.draft {
+  background: #fff4d6;
+  border: 1px dashed #c99a2e;
+  border-radius: 6px;
+  color: #6b4e0f;
+  font-style: italic;
+  margin: 0 0 1.25rem;
+  padding: .5rem .9rem;
+}

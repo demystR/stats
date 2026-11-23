@@ -4,28 +4,33 @@
 
 ## Equations are Blueprints
 
-- equations look scary: lots of instructions packed in; R code unfolds them
-- this chapter: mean (centre) and variance (spread)
-- path from raw values to an SD function:
+- equations look scary: lots of instructions packed into a small space; R code unfolds them
+- this chapter: mean and variance
+  - mean: where the centre of a set of values is
+  - variance: how spread out the values are around that centre
+- rough path from the raw values to an SD function:
 
 ```text
 values -> mean -> distances from the mean -> variance -> standard deviation
 ```
 
-- note: first bit of the wider tree; these pieces later become SE and the t-statistic
+- note: first bit of the wider tree; start with raw values, build the summaries that later become standard error and the t-statistic
 
 ## Files For This Chapter
 
+- you write your own functions in RStudio as you read
 - download this chapter's exercise file, save in `demystify` project folder next to `my_functions.R` (see [Getting Started](#getting-started)):
 
 - <a href="exercises/1b-equations-exercises.Rmd" download>1b-equations-exercises.Rmd</a>: the exercises from this chapter with blanks for you to fill in.
 
-- if not already got it: <a href="exercises/my_functions.R" download>my_functions.R</a>, same folder; add each function to it, reuse later
-- write and run functions in the exercise file, keep this page open alongside
+- if toolbox not downloaded yet: get <a href="exercises/my_functions.R" download>my_functions.R</a> now, same folder
+  - add each function you build to it; reuse them in later chapters
+- open the exercise file in RStudio, keep this page open next to it
+- when the book asks you to write a function: write it in the exercise file and run it there
 
 ## Seeing The Mean
 
-- small set of ten values
+- start with a small set of values
 
 ```{r mean-visual-data}
 x <- c(44, 47, 48, 49, 50, 50, 51, 52, 53, 56)
@@ -35,8 +40,9 @@ scores <- tibble(value = x)
 scores
 ```
 
-- mean is `r mean_x`
-- mean = balance point; dots are values, orange line is the mean
+- their mean is `r mean_x`
+- mean = balance point of the values
+- graph: each dot is one value on the x-axis; orange line is the mean
 
 ```{r mean-visual, fig.cap="The mean as the centre of a small set of values.", echo=FALSE}
 mean_data <- tibble(
@@ -60,24 +66,26 @@ ggplot(mean_data, aes(x = value, y = y)) +
 ```{r mean-visual-code, ref.label="mean-visual", eval=FALSE, webex.hide="Show the plot code"}
 ```
 
-- note: line lands on 50, also one of the values, but coincidence; mean uses all ten values
+- note: orange line lands on 50, also one of the values, but coincidence: mean is calculated from all ten values together
 
 What is the mean of `c(44, 47, 48, 49, 50, 50, 51, 52, 53, 56)`? `r fitb(50)`
 
 ## Building A Mean Function
 
-- add up, divide by how many: write as equation, split into parts, one line of R each
-- end: own mean function; var, SD, SE, t functions later all build on it
+- probably calculated a mean before: add everything up, divide by how many things you added
+- plan: write that recipe as an equation, pull it apart, turn each part into a line of R
+- end: your own mean function
+- variance, SD, SE and t-statistic functions later in the book all built on top of it
 
 ### The Mean Equation
 
-- the mean as an equation:
+- the mean written as an equation:
 
 $$
 \bar{x} = \frac{\sum_{i=1}^{n} x_i}{n}
 $$
 
-- what each symbol does:
+- each symbol has a job:
 
 | Maths | Read it as | R |
 |-----|--------------------|----------|
@@ -87,31 +95,34 @@ $$
 | $\sum_{i=1}^{n}$ | add up every value, from the first ($i = 1$) to the last ($i = n$) | `sum()` |
 | $\bar{x}$ | the mean of $x$, said "x bar" | what our function returns |
 
-- in words: add up every value of $x$, divide by how many there are
+- in words: **add up every value of $x$, then divide by how many values there are.**
 
 ### Step 1: Add Up The Values
 
-- $\sum$ = capital sigma, "sum"; only repeated addition
-- by hand with our ten values:
+- $\sum$ = capital Greek letter sigma, stands for "sum"
+- tends to be the bit that puts people off, but only asks for repeated addition
+- with our ten values, could write every step out:
 
 ```{r sum-by-hand}
 44 + 47 + 48 + 49 + 50 + 50 + 51 + 52 + 53 + 56
 ```
 
-- fine for 10, miserable for 200; `sum()` does the same for any vector:
+- works, but miserable with 200 values; would have to retype every time the data changed
+- `sum()` does the same repeated addition for any vector we give it:
 
 ```{r sum-function}
 total <- sum(x)
 total
 ```
 
-- note: $\sum$ in an equation -> expect `sum()` in the code
+- same answer
+- note: whenever you see $\sum$ in an equation, expect `sum()` somewhere in the R code
 
-- total of `x`: `r fitb(500)`
+- total of the values in `x`: `r fitb(500)`
 
 ### Step 2: Count The Values
 
-- `length()` gives $n$
+- `length()` tells us how many values are in a vector; that is our $n$
 
 ```{r count-values}
 n <- length(x)
@@ -120,7 +131,9 @@ n
 
 ### Step 3: Divide
 
-- fraction line: total on top, $n$ underneath; student writes the division
+- last part of the equation is the fraction line: total on top, $n$ underneath
+- both pieces now saved, as `total` and `n`
+- write the line that divides one by the other:
 
 ```{r divide-total-exercise, eval=FALSE}
 mean_value <-
@@ -138,12 +151,15 @@ mean_value
 ```
 `r unhide()`
 
-- same value as orange line in the plot
+- that is the mean; same value the orange line marked in the plot above
 
 ### Your Turn: Write `my_mean()`
 
-- put the three steps in a function, same shape as Chapter \@ref(functions): input `x`, process add/count/divide, output mean
-- fill in the blanks
+- put the three steps inside a function, same shape as the functions in Chapter \@ref(functions):
+  - input: a vector of values, `x`
+  - process: add up, count, then divide
+  - output: the mean
+- fill in the blanks below
 
 ```{r my-mean-exercise, eval=FALSE}
 my_mean <- function(x) {
@@ -175,22 +191,29 @@ my_mean(x)
 
 ### Check It Against `mean()`
 
-- check against R's `mean()` (`stats` package); every function in the book gets checked like this
-- part 1: print both side by side; named `c()` labels them `mine` and `R`
+- R already has a mean function, `mean()`, comes with R in the `stats` package
+- every function you build in this book gets checked against the version R provides
+- if the two agree: you have reproduced exactly what the professional version does
+- the check has two parts
+- part 1: print both answers side by side
+  - put them inside `c()` and name each one, `mine` and `R`, to label the output so you can tell which is which
 
 ```{r my-mean-check}
 c(mine = my_mean(x), R = mean(x))
 ```
 
-- part 2: compare with `all.equal()`
+- part 2: ask R to compare them for you with `all.equal()`
 
 ```{r my-mean-all-equal}
 all.equal(my_mean(x), mean(x))
 ```
 
-- explain: `all.equal()` returns `TRUE` if they match, else how far apart
-- why not `==`: tiny floating-point differences from calculation order
-- second set of values in case first matched by luck: `score_values`, eight scores, `score` column of `demo_scores` from Chapter \@ref(functions)
+- `all.equal()` takes two results, returns `TRUE` if they match
+- if they do not match: tells you how far apart they are instead
+- why not `==`: computers sometimes produce tiny differences far past the tenth decimal place when doing the same calculation in a slightly different order
+  - `all.equal()` ignores those, so `TRUE` means the answers really are the same
+- one example could match by luck, so check a second set of values too
+  - `score_values`: eight test scores, the `score` column from the `demo_scores` data in Chapter \@ref(functions)
 
 ```{r my-mean-check-2}
 score_values <- c(48, 51, 49, 54, 52, 50, 53, 51)
@@ -199,28 +222,33 @@ c(mine = my_mean(score_values), R = mean(score_values))
 all.equal(my_mean(score_values), mean(score_values))
 ```
 
-- two `TRUE`s = matches `mean()`; if not, check brackets and step order (common slip: dividing by the wrong thing)
+- `TRUE` both times = your function does what `mean()` does
+- if not: check the brackets and the order of the steps
+  - common slip: dividing by the wrong thing
 
 Which line in `my_mean()` counts how many values are in `x`? `r mcq(c("total <- sum(x)", answer = "n <- length(x)", "return(output)"))`
 
-- work out mean of `c(2, 4, 9)` in your head, then check with `my_mean(c(2, 4, 9))`: `r fitb(5)`
+- before running it, work out the mean of `c(2, 4, 9)` in your head; then check with `my_mean(c(2, 4, 9))`: `r fitb(5)`
 
 ### What The Mean Tells Us
 
-- point out: mean of 5 is not one of the values; summarises all of them
-- mean as **balance point**: distances below and above cancel exactly
+- point out: that last example has a mean of 5, and 5 is not one of the values
+- mean summarises all the values at once, so does not have to match any of them
+- also the **balance point** of the values: take each value's distance from the mean; distances below and above cancel out exactly
 
 ```{r mean-balance}
 x - my_mean(x)
 sum(x - my_mean(x))
 ```
 
-- distances sum to zero for any set of values; try `score_values` or `c(2, 4, 9)`
-- keep in mind: summing distances always gives zero, so measuring spread needs another step
+- negative and positive distances add up to zero; that is what "balance point" means
+- happens with any set of values; try it with `score_values` or `c(2, 4, 9)`
+- keep this in mind: next we measure spread using distances from the mean
+  - simply adding the distances up will always give zero, so we will need another step
 
 ## Seeing Distances From The Mean
 
-- variance starts from each value's distance from the mean
+- variance starts by asking how far each value is from the mean
 
 ```{r distance-visual, fig.cap="Each value has a distance from the mean.", echo=FALSE}
 distance_data <- tibble(
@@ -251,11 +279,13 @@ ggplot(distance_data) +
 ```{r distance-visual-code, ref.label="distance-visual", eval=FALSE, webex.hide="Show the plot code"}
 ```
 
-- orange segments = distances; some close, some far; variance turns them into one number
+- orange segments = distance from each value to the mean
+- some values close to the mean, some further away
+- variance: a way of turning all those distances into one number
 
 ## From Points To A Distribution
 
-- same values as a small distribution
+- the same values can also be shown as a small distribution
 
 ```{r value-distribution, fig.cap="The same values shown as a small distribution.", echo=FALSE}
 ggplot(scores, aes(x = value)) +
@@ -274,9 +304,10 @@ ggplot(scores, aes(x = value)) +
 ```{r value-distribution-code, ref.label="value-distribution", eval=FALSE, webex.hide="Show the plot code"}
 ```
 
-- same x-axis and values as the dot plot, viewed differently
-- bar height = how many values in that bin
-- next step in summarising:
+- same x-axis as the dot plot; exactly the same values, viewed a different way
+- shows which values (or small ranges of values) show up most in the data
+- bar height = how many values lie in that range (or "bin")
+- moves us further along the process of summarising the data:
 
 ```text
 individual points -> distribution of values -> summaries of that distribution
@@ -284,7 +315,7 @@ individual points -> distribution of values -> summaries of that distribution
 
 ## Seeing Variance
 
-- three distributions, same mean, different SDs
+- three distributions with the same mean but different standard deviations
 
 ```{r variance-visual, fig.cap="Same mean, different spread.", echo=FALSE}
 dist_x <- seq(-4, 4, 0.01)
@@ -318,31 +349,42 @@ ggplot(dist_data, aes(x = value, y = density, colour = spread)) +
 ```{r variance-visual-code, ref.label="variance-visual", eval=FALSE, webex.hide="Show the plot code"}
 ```
 
-- all centred in same place; difference is how far values sit from centre = idea behind variance
+- all three curves centred in the same place
+- difference: how far the values tend to sit from that centre
+- this is the visual idea behind variance
 
 ## Try It Interactively
 
-- widget: change mean and variance of a normal distribution
+- use the widget below to change the mean and variance of a normal distribution
 
 <iframe src="apps/mean-variance/embed.html" width="100%" height="720" title="Mean and variance interactive widget" style="border: 0;"></iframe>
 
-- notice: mean shifts curve left/right; bigger variance spreads it, smaller tightens it
-- dots and curve can be toggled
+- move the mean: whole distribution shifts left or right
+- increase the variance: distribution spreads out
+- decrease the variance: it gets tighter
+- can switch the dots and the bell curve on and off to focus on one part at a time
 
 ## The Variance Equation
 
-- connect picture to equation:
+- now connect the picture to the equation:
 
 $$
 s^2 = \frac{\sum_{i=1}^{n}(x_i - \bar{x})^2}{n-1}
 $$
 
-- steps: each value, minus mean, square, add up, divide by `n - 1`
-- only subtraction, squaring, addition, division
+- the formula says:
+
+1. take each value in `x`;
+2. subtract the mean of `x`;
+3. square that distance;
+4. add all the squared distances together;
+5. divide by `n - 1`.
+
+- looks scary, but only repeated subtraction, squaring, addition and division
 
 ## Notation To R
 
-- most symbols from the mean equation; new piece is the squared distance
+- met most of these symbols in the mean equation; new piece is the squared distance from the mean
 
 | Maths | Meaning | R |
 |---|---|---|
@@ -352,17 +394,25 @@ $$
 | $(x_i - \bar{x})^2$ | squared distance from the mean | `(x - mean_x)^2` |
 | $\sum$ | add repeated values | `sum()` |
 
-- read $\sum$ as before: same calculation for every value, then add with `sum()`
+- as with the mean, read $\sum$ as:
+
+<div class="summary-box">
+Do this same calculation for every value, then add the results with `sum()`.
+</div>
 
 ## Squared Distances
 
-- same ten values, mean still 50
+- variance is based on distances from the mean
+- keep using the ten values from the start of the chapter, so mean is still 50
 
 ```{r squared-distances-mean}
 mean_x <- my_mean(x)
 ```
 
-- student adds two columns to `scores` with `mutate()`: `distance` (value minus mean), `squared` (distance squared)
+- before writing the whole function, work out the middle of the equation yourself
+- use `mutate()` to add two columns to `scores` (the table from the start of the chapter):
+  - `distance`: each value minus the mean
+  - `squared`: each distance, squared
 
 ```{r squared-distances-exercise, eval=FALSE}
 mutate(
@@ -386,10 +436,13 @@ mutate(
 ```
 `r unhide()`
 
-- point out: squaring makes all distances positive, so they no longer cancel
+- point out: squaring makes every distance positive, so distances below and above the mean no longer cancel out
 - which values have the largest squared distance? `r mcq(c(answer = "44 and 56", "50 and 50", "47 and 53"))`
 
-- now sum them; a function only has vector `x`, not `scores`, so use `x - mean_x` (same distances), square, `sum()`
+- next: add the squared distances up
+- a function will not have a `scores` table, only the vector `x`, so do this step with `x`
+- `x - mean_x` gives the same distances as the `distance` column, because `x` holds the same values as `value`
+- square them, add them up with `sum()`:
 
 ```{r total-squared-distance-exercise, eval=FALSE}
 sum()
@@ -403,12 +456,19 @@ sum((x - mean_x)^2)
 ```
 `r unhide()`
 
-- note: this total is the numerator; rest turns it into an average squared distance
+- note: this total is the numerator of the variance equation; the rest of the equation turns it into an average squared distance
 
 ## Your Turn: Write `my_var()`
 
-- whole formula, one line per step: count, mean via `my_mean()`, squared distances, sum, divide by `n - 1`
-- fill in the blanks
+- now build the whole formula; each line of the function is one step from the list under the variance equation:
+
+1. count the values;
+2. calculate the mean, using your own `my_mean()`;
+3. square each distance from the mean;
+4. add the squared distances together;
+5. divide by `n - 1`.
+
+- fill in the blanks below
 
 ```{r my-var-exercise, eval=FALSE}
 my_var <- function(x) {
@@ -444,11 +504,12 @@ my_var(x)
 ```
 `r unhide()`
 
-- point out: `my_var()` uses `my_mean()` inside it
+- point out: `my_var()` uses `my_mean()` inside it; your variance function is built on your mean function
 
 ## Check It Against `var()`
 
-- R's version is `var()` (`stats`); same two-part check
+- R's version is `var()`, also from the `stats` package
+- same two-part check as before: print both answers, then compare with `all.equal()`
 
 ```{r my-var-check}
 c(mine = my_var(x), R = var(x))
@@ -462,7 +523,7 @@ c(mine = my_var(score_values), R = var(score_values))
 all.equal(my_var(score_values), var(score_values))
 ```
 
-- two `TRUE`s = reproduces `var()`
+- two `TRUE`s = your function reproduces `var()`
 - what does `length(x)` give us in this formula? `r mcq(c(answer = "the number of values", "the largest value", "the mean"))`
 
 ## Why Divide By `n - 1`?
@@ -505,7 +566,7 @@ $$
 s = \sqrt{s^2}
 $$
 
-- student computes SD from `my_var()`, checks against `sd()`
+- work out the SD of `x` from your `my_var()`, then check it against R's `sd()`:
 
 ```{r standard-deviation-exercise, eval=FALSE}
 sd_x <-
@@ -525,24 +586,28 @@ all.equal(sd_x, sd(x))
 ```
 `r unhide()`
 
-- point out: once variance understood, SD is one more operation
-- `my_sd()` becomes its own function next chapter
+- point out: once you understand variance, SD is one more operation
+- you turn it into its own function, `my_sd()`, in the next chapter
 
 ## Add To Your Toolbox
 
-- now two functions; keep them in `my_functions.R` (downloaded in [Getting Started](#getting-started)), load when needed; saved in `demystify` folder next to exercise file
+- now built two functions
+- rather than typing them out again every chapter: keep them in one file, `my_functions.R`, load it whenever needed
+- downloaded in [Getting Started](#getting-started); should be saved in your `demystify` project folder, next to your exercise file
 
 ### What Goes In The File
 
-- file holds only function definitions (from `my_mean <- function(x) {` to closing `}`), no data, no lines that run them
+- `my_functions.R` is an ordinary R script, but only contains function definitions
+  - the code that creates each function, from `my_mean <- function(x) {` down to its closing `}`
+- no data, no lines that run the functions
 
 ### Copy Your Functions In
 
-1. open `my_functions.R` from the **Files** pane
-2. copy finished `my_mean()` from exercise file (Ctrl+C / Cmd+C)
-3. paste under **From Equations to Code** heading (Ctrl+V / Cmd+V)
+1. in RStudio's **Files** pane, click `my_functions.R` to open it in a new tab
+2. in your exercise file, select your finished `my_mean()`, from `my_mean <- function(x) {` down to its closing `}`; copy with Ctrl+C (Cmd+C on a Mac)
+3. switch to the `my_functions.R` tab, paste under the **From Equations to Code** heading with Ctrl+V (Cmd+V on a Mac)
 4. same for `my_var()`
-5. save (Ctrl+S / Cmd+S); unsaved tab name shows red
+5. save with Ctrl+S (Cmd+S on a Mac); a tab with unsaved changes shows its name in red
 
 Your file should now contain both functions under the **From Equations to Code** heading, with the other headings still empty. Open the box below to check it against the full file.
 
@@ -560,7 +625,7 @@ Your file should now contain both functions under the **From Equations to Code**
 # Some functions return a tibble, so load the tidyverse before using them.
 
 
-# PART I: BUILDING TEST STATISTICS =========================================
+# PART I: BASICS AND SUMMARY STATISTICS ====================================
 
 
 # From Equations to Code ---------------------------------------------------
@@ -588,6 +653,9 @@ my_var <- function(x) {
 
 
 
+# PART II: INFERENTIAL TESTS ==============================================
+
+
 # The One-Sample t-Test ----------------------------------------------------
 # my_t_value() and my_t_test() go here
 
@@ -595,25 +663,6 @@ my_var <- function(x) {
 
 # Covariance and Correlation -----------------------------------------------
 # my_covariance(), my_correlation() and my_correlation_t() go here
-
-
-
-# PART II: TESTING BY SIMULATION ===========================================
-
-
-# Null Distributions -------------------------------------------------------
-# my_null_t() and my_cutoffs() go here
-
-
-
-# p-values -----------------------------------------------------------------
-# my_sim_p_value() and my_p_value() go here
-# (and my_null_correlation_t() if you did the correlation section)
-
-
-
-# Effects and Power --------------------------------------------------------
-# my_effect_t(), my_power() and my_cohens_d() go here
 ```
 `r unhide()`
 
@@ -621,13 +670,16 @@ The lines starting with `#` are comments. R ignores them, so they are only there
 
 ### Load The File With `source()`
 
-- `source()` runs every line of a script; file only has definitions, so it creates `my_mean()` and `my_var()` and nothing else
+- `source()` runs every line of an R script
+- `my_functions.R` only has function definitions, so running it creates your functions and does nothing else
+- afterwards `my_mean()` and `my_var()` exist in your session, just as if you had run their chunks yourself
 
 ```{r source-toolbox, eval=FALSE}
 source("my_functions.R")
 ```
 
-- R looks in same folder as exercise file, hence saving together; every chapter from now starts with this line
+- R looks for the file in the same folder as your exercise file, which is why the two need to be saved together
+- every chapter from now on starts with this line
 
 ### Check The Saved File Works
 
@@ -650,14 +702,17 @@ You should see:
 
 ### Common Slips
 
-- slips and their errors:
-  - copied version with blanks: `object 'output' not found`
-  - missing closing `}`: `unexpected end of input`
-  - copied a line that runs the function, e.g. `my_mean(x)`: `object 'x' not found`
-  - forgot to save: `source()` reads the saved file
-  - `cannot open file 'my_functions.R'`: not in same folder as exercise file
+- **Copying the version with blanks** instead of your finished function: `source()` runs without complaint, but the check fails with an error such as `object 'output' not found`
+- **Missing the closing `}`**: `source()` stops with `unexpected end of input`
+- **Copying a line that runs the function**, such as `my_mean(x)`: loaded on its own, `x` does not exist, so `source()` stops with `object 'x' not found`
+- **Forgetting to save**: `source()` reads the saved file, so unsaved changes are ignored
+- **`cannot open file 'my_functions.R'`**: file is not in the same folder as your exercise file; check both are in your `demystify` project folder
 
 ## Next Step
 
-- other summaries use the same ideas: start with values, compute small pieces, combine in order, return result
-- next chapter: build a few small generic statistic functions
+- other summary statistics use the same ideas:
+  - start with a set of values
+  - calculate small useful pieces
+  - combine those pieces in a clear order
+  - return the result
+- next chapter: build a few small generic statistic functions ourselves

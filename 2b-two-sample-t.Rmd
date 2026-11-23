@@ -2,8 +2,6 @@
 
 <div class="draft">Work in progress.</div>
 
-*Not written yet.* Outline:
-
 - paired t = one-sample t on the differences, so `my_t_value()` does it
 - independent t: two separate groups, pooled SD
 - Welch version for unequal variances

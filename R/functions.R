@@ -4,7 +4,7 @@
 # their own versions in exercises/my_functions.R, under the same headings.
 
 
-# PART I: BUILDING TEST STATISTICS =========================================
+# PART I: BASICS AND SUMMARY STATISTICS ====================================
 
 
 # From Equations to Code ---------------------------------------------------
@@ -60,6 +60,9 @@ my_z_score <- function(x) {
 }
 
 
+# PART II: INFERENTIAL TESTS ==============================================
+
+
 # The One-Sample t-Test ----------------------------------------------------
 
 my_t_value <- function(x, comparison_value) {
@@ -99,71 +102,5 @@ my_correlation_t <- function(x, y) {
   r <- my_correlation(x, y)
   n <- length(x)
   output <- r * sqrt((n - 2) / (1 - r^2))
-  return(output)
-}
-
-
-# PART II: TESTING BY SIMULATION ===========================================
-
-
-# Null Distributions -------------------------------------------------------
-
-my_null_t <- function(n, pop_mean, pop_sd) {
-  sample_values <- rnorm(n = n, mean = pop_mean, sd = pop_sd)
-  output <- my_t_value(sample_values, comparison_value = pop_mean)
-  return(output)
-}
-
-my_cutoffs <- function(null_ts, alpha = 0.05) {
-  sorted <- sort(null_ts)
-  n <- length(sorted)
-  k <- floor(n * alpha / 2)
-  lower <- sorted[k + 1]
-  upper <- sorted[n - k]
-  output <- c(lower, upper)
-  return(output)
-}
-
-
-# p-values -----------------------------------------------------------------
-
-my_sim_p_value <- function(t, null_ts) {
-  as_extreme <- abs(null_ts) >= abs(t)
-  output <- my_mean(as_extreme)
-  return(output)
-}
-
-my_p_value <- function(t, df) {
-  lower_tail <- pt(-abs(t), df)
-  output <- 2 * lower_tail
-  return(output)
-}
-
-# Bonus: correlation
-my_null_correlation_t <- function(x) {
-  null_y <- rnorm(length(x))
-  output <- my_correlation_t(x, null_y)
-  return(output)
-}
-
-
-# Effects and Power --------------------------------------------------------
-
-my_effect_t <- function(n, pop_mean, pop_sd, comparison_value) {
-  sample_values <- rnorm(n = n, mean = pop_mean, sd = pop_sd)
-  output <- my_t_value(sample_values, comparison_value)
-  return(output)
-}
-
-my_power <- function(ts, cutoffs) {
-  past <- ts < cutoffs[1] | ts > cutoffs[2]
-  output <- my_mean(past)
-  return(output)
-}
-
-my_cohens_d <- function(x, comparison_value) {
-  mean_x <- my_mean(x)
-  sd_x <- my_sd(x)
-  output <- (mean_x - comparison_value) / sd_x
   return(output)
 }

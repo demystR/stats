@@ -1,12 +1,14 @@
+# (PART) Inferential Tests {-}
+
 # The One-Sample t-Test {#t-statistic}
 
 <div class="draft">Work in progress.</div>
 
 ## One More Function
 
-- recap: functions for mean, variance, SD, SE so far
-- now build t from them, then check against R's t-test
-- the question t answers:
+- recap: small functions for mean, variance, SD, SE so far
+- those pieces can also build a t-statistic: piece by piece, then check against R's own t-test
+- the basic question:
 
 <div class="summary-box">
 How far is my sample mean from a comparison value, relative to the noise in the sample?
@@ -21,14 +23,15 @@ scores <- c(44, 47, 48, 49, 50, 50, 51, 52, 53, 56)
 comparison_value <- 49
 ```
 
-- comparison value = what we compare the sample to (e.g. scale midpoint, benchmark, previous study)
-- two comparison values: 49 (close to mean), later 46 (further away); watch what changes and what stays the same
+- comparison value = just the value we compare the sample against (e.g. scale midpoint, known benchmark, value from a previous study)
+- same sample, two comparison values: first 49 (close to sample mean), later 46 (further away)
+- keep an eye on what changes between the two and what stays the same
 
 ## Files For This Chapter
 
 - download exercise file, save next to `my_functions.R`:
 
-- <a href="exercises/1d-t-statistic-exercises.Rmd" download>1d-t-statistic-exercises.Rmd</a>
+- <a href="exercises/2a-t-statistic-exercises.Rmd" download>2a-t-statistic-exercises.Rmd</a>
 
 ## Load Your Toolbox
 
@@ -43,7 +46,7 @@ source("my_functions.R")
 source("R/functions.R")
 ```
 
-Check that they still match R before building on them:
+- check they still match R before building on them:
 
 ```{r toolbox-check}
 all.equal(my_mean(scores), mean(scores))
@@ -52,7 +55,7 @@ all.equal(my_sd(scores), sd(scores))
 all.equal(my_se(scores), t.test(scores)$stderr)
 ```
 
-Four `TRUE`s and you are ready.
+- four `TRUE`s = ready
 
 ## The Equation
 
@@ -75,21 +78,26 @@ t = \frac{\overbrace{\bar{x} - \mu_0}^{\text{difference}}}{\underbrace{s / \sqrt
 $$
 
 - two halves pull opposite ways:
-  - numerator: bigger difference, bigger t
-  - denominator: bigger SE (spread of sample means), smaller t
-- so t = size of the difference after allowing for sampling uncertainty
+  - **the numerator:** bigger difference between sample mean and comparison value, bigger t
+  - **the denominator:** bigger SE (spread in sample means), smaller t
+- so t = how big the difference of interest is, *after* taking into account the uncertainty from sampling
 - with our scores and comparison value `r comparison_value`:
 
 $$
 t = \frac{`r my_mean(scores)` - `r comparison_value`}{`r round(my_se(scores), 2)`} = `r round(my_t_value(scores, comparison_value), 2)`
 $$
 
-- `my_se()` already gives the bottom, so only new step is the division
-- steps: mean; subtract comparison value; SE; divide difference by SE
+- `my_se()` already gives the bottom of the fraction, so the t-value needs only one new step: the division
+- read as:
+
+1. calculate the sample mean
+2. subtract the comparison value
+3. calculate the SE
+4. divide the difference by the SE
 
 ## Build The Pieces
 
-- every piece already built:
+- every piece of the equation is something already built:
 
 ```{r t-pieces}
 mean_score <- my_mean(scores)
@@ -98,7 +106,7 @@ se_score <- my_se(scores)
 c(mean = mean_score, se = se_score)
 ```
 
-- student writes one line: (mean - comparison value) / SE
+- now put the pieces into the equation yourself: one line, subtract comparison value from mean, then divide by SE
 
 ```{r t-by-hand-exercise, eval=FALSE}
 t_value <-
@@ -118,12 +126,16 @@ t_value
 ```
 `r unhide()`
 
-- sign of t: positive = mean above comparison value, negative = below
+- sign of t = which side of the comparison value the mean falls: positive above, negative below
 
 ## Your Turn: Write `my_t_value()`
 
 - two inputs: values `x` and the comparison value
-- recipe: mean with `my_mean()`; SE with `my_se()`; (mean - comparison value) / SE
+- recipe:
+
+1. sample mean, using `my_mean()`
+2. SE, using `my_se()`
+3. subtract comparison value from mean, then divide by SE
 
 ```{r my-t-value-exercise, eval=FALSE}
 my_t_value <- function(x, comparison_value) {
@@ -153,20 +165,23 @@ my_t_value(scores, comparison_value = 49)
 ```
 `r unhide()`
 
-- returns one number; full t-test also gives df and p-value (later)
+- returns one number, the t-statistic; full t-test also reports df and a p-value (coming later)
 
 The denominator of the t-statistic is the `r fitb("standard error")`.
 
 ## Check It Against `t.test()`
 
-- R's version: `t.test()` from `stats`; first the full output:
+- R's version: `t.test()` from the `stats` package; as with every function so far, check ours against it
+- first, the full output:
 
 ```{r compare-ttest}
 t.test(scores, mu = comparison_value)
 ```
 
-- explain: `t` here should match ours; `t.test()` returns a list, `$statistic` picks out t
-- `unname()` drops the `t` label, else `all.equal()` reports names differ
+- the `t` in this output should match our function
+- to check with `all.equal()`, pull the t-value out: `t.test()` returns a list of results, `$statistic` picks out t
+- value comes with a label attached (`t`); `unname()` removes it, leaving just the number
+- otherwise `all.equal()` reports the names differ, even though the numbers match
 
 ```{r compare-ttest-check}
 t_result <- t.test(scores, mu = comparison_value)
@@ -175,20 +190,26 @@ c(mine = my_t_value(scores, comparison_value), R = unname(t_result$statistic))
 all.equal(my_t_value(scores, comparison_value), unname(t_result$statistic))
 ```
 
-- `TRUE` = reproduces `t.test()` t-value
-- output also has `df`, p-value, CI; one-sample `df` = n - 1 (same as in variance)
+- `TRUE` = your function reproduces the t-value from `t.test()`
+- output also reports degrees of freedom (`df`), a p-value and a confidence interval
+- one-sample test: `df` = sample size minus one, same $n - 1$ as in the variance
 
 <div class="note">
 **What about the p-value?**
 
-- p-value answers a question not yet asked: if no real difference, how unusual is a t this far from zero?
-- built in Chapters \@ref(null-distributions) and \@ref(p-values) (Part II); focus on t for now
+- `t.test()` also reports a p-value
+- it answers a question not yet asked: if there were no real difference, how unusual would a t-value this far from zero be?
+- we build that ourselves in the companion book, [Demystifying Null Hypothesis Testing](https://demystr.github.io/nhst/): [Null Distributions](https://demystr.github.io/nhst/null-distributions.html) and [p-values](https://demystr.github.io/nhst/p-values.html)
+- for now, focus on what the t-value itself tells you
 </div>
 
 ## Your Turn: Write `my_t_test()`
 
-- one function returning a table with t and df
-- steps: t with `my_t_value()`; df = n - 1; `tibble()`
+- put the pieces together: one function returning a small table with t and its df
+
+1. t with `my_t_value()`
+2. df = number of values minus one
+3. both into a table with `tibble()`
 
 ```{r my-t-test-exercise, eval=FALSE}
 my_t_test <- function(x, comparison_value) {
@@ -220,8 +241,9 @@ my_t_test(scores, comparison_value = 49)
 
 ## Check It Against `t.test()` Again
 
-- df stored as `parameter`; build a one-row tibble of R's t and df
-- `bind_rows()` and `all.equal()` as in Chapter \@ref(standard-error)
+- `t.test()` keeps df under the name `parameter`
+- to check both numbers at once: put R's t and df into a one-row tibble shaped like `my_t_test()`'s output
+- as in Chapter \@ref(standard-error): `bind_rows()` stacks the two rows side by side, `all.equal()` compares the whole table
 
 ```{r my-t-test-check}
 my_result <- my_t_test(scores, comparison_value)
@@ -234,7 +256,7 @@ bind_rows(mine = my_result, R = r_result, .id = "version")
 all.equal(my_result, r_result)
 ```
 
-- `TRUE` = matches t and df
+- `TRUE` = own functions reproduce t and df from `t.test()`
 - interpret: mean `r round(my_mean(scores), 2)`, comparison `r comparison_value`, mean sits `r round(my_t_value(scores, comparison_value), 2)` SEs above it
 
 ## A Second Comparison Value
@@ -263,12 +285,13 @@ all.equal(my_result_2, r_result_2)
 | `r comparison_value` | `r round(my_mean(scores) - comparison_value, 2)` | `r round(my_se(scores), 2)` | `r round(my_t_value(scores, comparison_value), 2)` |
 | `r comparison_value_2` | `r round(my_mean(scores) - comparison_value_2, 2)` | `r round(my_se(scores), 2)` | `r round(my_t_value(scores, comparison_value_2), 2)` |
 
-- t = distance from comparison value in SEs; ~4 SEs away harder to put down to noise than ~1
-- how far is far enough = p-values; Chapter \@ref(null-distributions) builds the null distribution, Chapter \@ref(p-values) turns it into p-values
+- t = distance between sample mean and comparison value, measured in SEs
+- mean nearly four SEs from the comparison value much harder to put down to noise than one about one SE away
+- deciding how far is far enough = job of p-values; [Null Distributions](https://demystr.github.io/nhst/null-distributions.html) in the NHST book builds the null distribution they need from scratch, [p-values](https://demystr.github.io/nhst/p-values.html) turns it into p-values
 
 Which part of the t-statistic changed between the two tests? `r mcq(c("the standard error", answer = "the difference between the sample mean and the comparison value", "the sample size"))`
 
-- try: comparison value 55; predict sign of t first
+- try a third comparison value: 55; predict the sign of t before running
 
 `r hide("Show one solution")`
 ```{r t-sign-exercise}
@@ -281,7 +304,9 @@ The t-value is negative because our sample mean is below 55.
 ## Try It On Real Data
 
 - back to `sleep` from Chapter \@ref(standard-error)
-- did drug 1 add sleep on average? if no effect, population mean of `extra` = 0, so comparison value 0
+- did the first drug add any sleep, on average?
+- if it did nothing, population mean of `extra` = 0, so 0 is the comparison value
+- run your t-test and R's:
 
 ```{r real-data-ch4}
 drug_1 <- sleep %>% filter(group == 1) %>% pull(extra)
@@ -298,7 +323,7 @@ all.equal(my_result, drug_r_result)
 ```
 
 - interpret: on average `r my_mean(drug_1)` hours more sleep, mean about `r round(my_t_value(drug_1, 0), 1)` SEs above 0
-- whether that is far enough: Chapter \@ref(p-values)
+- whether that is far enough to rule out noise: [p-values](https://demystr.github.io/nhst/p-values.html) in the NHST book
 
 ## Add To Your Toolbox
 
@@ -313,7 +338,7 @@ The steps are the same as in Chapter \@ref(equations):
 3. Save the file.
 
 `r hide("Show what my_functions.R should look like now")`
-```{r my-functions-after-1d-t-statistic, eval=FALSE}
+```{r my-functions-after-2a-t-statistic, eval=FALSE}
 # My statistics functions
 #
 # Add each function you build to this file, under the heading of the
@@ -326,7 +351,7 @@ The steps are the same as in Chapter \@ref(equations):
 # Some functions return a tibble, so load the tidyverse before using them.
 
 
-# PART I: BUILDING TEST STATISTICS =========================================
+# PART I: BASICS AND SUMMARY STATISTICS ====================================
 
 
 # From Equations to Code ---------------------------------------------------
@@ -382,6 +407,9 @@ my_z_score <- function(x) {
 
 
 
+# PART II: INFERENTIAL TESTS ==============================================
+
+
 # The One-Sample t-Test ----------------------------------------------------
 my_t_value <- function(x, comparison_value) {
   mean_x <- my_mean(x)
@@ -401,25 +429,6 @@ my_t_test <- function(x, comparison_value) {
 
 # Covariance and Correlation -----------------------------------------------
 # my_covariance(), my_correlation() and my_correlation_t() go here
-
-
-
-# PART II: TESTING BY SIMULATION ===========================================
-
-
-# Null Distributions -------------------------------------------------------
-# my_null_t() and my_cutoffs() go here
-
-
-
-# p-values -----------------------------------------------------------------
-# my_sim_p_value() and my_p_value() go here
-# (and my_null_correlation_t() if you did the correlation section)
-
-
-
-# Effects and Power --------------------------------------------------------
-# my_effect_t(), my_power() and my_cohens_d() go here
 ```
 `r unhide()`
 
@@ -447,13 +456,13 @@ You should see one `TRUE`:
 
 ## Where This Goes Next
 
-- built a one-sample t entirely from own functions:
+- you have built a one-sample t-statistic entirely from your own functions:
 
 <div class="summary-box">
 values -> mean -> variance -> standard deviation -> standard error -> t
 </div>
 
-- one t = one sample; two ways on:
-  - keep building: next chapter, another test statistic from same pieces (rest of Part I)
-  - or Part II: Chapter \@ref(null-distributions) simulates samples to define "far enough", Chapter \@ref(p-values) turns it into p-values; only needs chapters done so far
-- either order; default suggestion: keep building, come back to Part II later
+- one t-value tells us about one sample; two ways to carry on:
+  - **Keep building.** Next chapter builds another test statistic from the same pieces; Part II keeps going like this, one statistic at a time
+  - **Dip into the NHST book.** [Null Distributions](https://demystr.github.io/nhst/null-distributions.html) in [Demystifying Null Hypothesis Testing](https://demystr.github.io/nhst/) takes the t-value just built and simulates thousands of samples to find out what "far enough" means; [p-values](https://demystr.github.io/nhst/p-values.html) turns that into p-values; only needs the chapters done here so far; can come back to Part I afterwards
+- either order works; not sure? keep building, come back to the NHST book once you have a few test statistics under your belt

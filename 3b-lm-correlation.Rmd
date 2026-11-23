@@ -2,8 +2,6 @@
 
 <div class="draft">Work in progress.</div>
 
-*Not written yet.* Outline:
-
 - practice and score data from Chapter \@ref(correlation)
 - `my_sse(intercept, slope)`: error for any line
 - regression widget challenge: find smallest-error line, submit, compare with best

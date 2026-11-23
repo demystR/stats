@@ -2,8 +2,6 @@
 
 <div class="draft">Work in progress.</div>
 
-*Not written yet.* Outline:
-
 - one-way ANOVA (Chapter \@ref(one-way-anova)) with `lm()`
 - 3+ groups: dummy coding as 0/1 variables
 - F from `my_sse()`: model with vs without the predictor (mean as a model, Chapter \@ref(lm-mean))

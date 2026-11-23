@@ -1,7 +1,0 @@
-# Kruskal-Wallis Test {#kruskal-wallis}
-
-<div class="draft">Work in progress.</div>
-
-*Not written yet.* Outline:
-
-- rank version of one-way ANOVA, 3+ independent groups

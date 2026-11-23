@@ -7,9 +7,11 @@
 # bookdown and knitr build output (the book is built and deployed by GitHub Actions)
 docs/
 _bookdown_files/
+stats.rds
 demyst.rds
 figure/
 *_cache/
+stats.tex
 demyst.tex
 render*.rds
 # knitr figure folders left at the top level

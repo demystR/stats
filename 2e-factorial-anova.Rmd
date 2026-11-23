@@ -2,8 +2,6 @@
 
 <div class="draft">Work in progress.</div>
 
-*Not written yet.* Outline:
-
 - two or more categorical predictors
 - split variation: main effect per predictor + interaction
 - an F for each

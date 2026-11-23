@@ -10,7 +10,7 @@
 # Some functions return a tibble, so load the tidyverse before using them.
 
 
-# PART I: BUILDING TEST STATISTICS =========================================
+# PART I: BASICS AND SUMMARY STATISTICS ====================================
 
 
 # From Equations to Code ---------------------------------------------------
@@ -23,6 +23,9 @@
 
 
 
+# PART II: INFERENTIAL TESTS ==============================================
+
+
 # The One-Sample t-Test ----------------------------------------------------
 # my_t_value() and my_t_test() go here
 
@@ -30,22 +33,3 @@
 
 # Covariance and Correlation -----------------------------------------------
 # my_covariance(), my_correlation() and my_correlation_t() go here
-
-
-
-# PART II: TESTING BY SIMULATION ===========================================
-
-
-# Null Distributions -------------------------------------------------------
-# my_null_t() and my_cutoffs() go here
-
-
-
-# p-values -----------------------------------------------------------------
-# my_sim_p_value() and my_p_value() go here
-# (and my_null_correlation_t() if you did the correlation section)
-
-
-
-# Effects and Power --------------------------------------------------------
-# my_effect_t(), my_power() and my_cohens_d() go here

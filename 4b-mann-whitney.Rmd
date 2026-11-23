@@ -1,8 +1,0 @@
-# Mann-Whitney U Test {#mann-whitney}
-
-<div class="draft">Work in progress.</div>
-
-*Not written yet.* Outline:
-
-- rank version of the independent t
-- also called Wilcoxon rank-sum
