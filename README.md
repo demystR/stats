@@ -1,4 +1,4 @@
-# Demystifying Statistics: From the Mean to the General Linear Model
+# Demystifying Statistical Functions
 
 Part of the [demystR](https://demystr.github.io) series. The book builds the mean, variance, standard error, t-tests, correlation, ANOVA and the general linear model from their equations, in R.
 

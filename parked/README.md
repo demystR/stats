@@ -19,15 +19,3 @@ Parked on 29 October 2026.
 These depart from the book's method, where students turn an equation into their own function and check it against R. Generalised and multilevel models have no closed-form equation for students to build, and assumption checks are diagnostics rather than equations.
 
 Dale Barr's [Learning Statistical Models Through Simulation in R](https://psyteachr.github.io/stat-models-v1/) covers generalised linear models and mixed-effects models by simulation.
-
-## Multiple Predictors
-
-- `lm-multiple-predictors.Rmd` (`#lm-multiple-predictors`): factorial ANOVA and ANCOVA as linear models.
-
-Parked for now to keep The General Linear Model part focused. It may come back.
-
-## Effects and Power Extras
-
-- `effects-power-extras.Rmd`: everything from APES onwards in Effects and Power (APES, `my_power_at()`, a priori power, sensitivity power, the post hoc note, one-sided tests, Try It On Real Data, Bonus: Power For A Correlation), the matching exercise-file sections, and the `my_power_at()` and `my_effect_correlation_t()` functions.
-
-Parked on 29 October 2026 to keep Effects and Power focused on the intuition; to revisit.

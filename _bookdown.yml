@@ -18,6 +18,7 @@ rmd_files:
   - "3b-lm-correlation.Rmd"
   - "3c-lm-t-test.Rmd"
   - "3d-lm-one-way-anova.Rmd"
+  - "3e-lm-multiple-predictors.Rmd"
 language:
   ui:
     chapter_name: "Chapter "

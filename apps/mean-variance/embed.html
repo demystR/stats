@@ -93,7 +93,7 @@
     canvas {
       display: block;
       width: 100%;
-      height: 430px;
+      height: auto;
       border: 1px solid var(--line);
       border-radius: 6px;
     }
@@ -151,9 +151,6 @@
         align-self: center;
       }
 
-      canvas {
-        height: 340px;
-      }
     }
   </style>
 </head>
@@ -283,9 +280,17 @@
       const opts = inputs();
       const canvas = els.canvas;
       const ctx = canvas.getContext("2d");
-      const width = canvas.width;
-      const height = canvas.height;
-      const pad = { left: 58, right: 22, top: 28, bottom: 58 };
+      // Draw at the size the canvas is shown, so text stays readable when the
+      // widget is embedded in a narrow column.
+      const width = canvas.clientWidth || 1000;
+      const height = Math.round(Math.max(320, width * 0.52));
+      const dpr = window.devicePixelRatio || 1;
+      if (canvas.width !== Math.round(width * dpr) || canvas.height !== Math.round(height * dpr)) {
+        canvas.width = Math.round(width * dpr);
+        canvas.height = Math.round(height * dpr);
+      }
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      const pad = { left: 24, right: 24, top: 14, bottom: 52 };
       const plotWidth = width - pad.left - pad.right;
       const plotHeight = height - pad.top - pad.bottom;
 
@@ -309,9 +314,6 @@
       ctx.lineTo(width - pad.right, yScale(0));
       ctx.stroke();
 
-      ctx.fillStyle = ink;
-      ctx.font = "18px system-ui, sans-serif";
-      ctx.fillText("Mean and variance as layers", pad.left, 20);
 
       const tickStep = niceTickStep(xMax - xMin);
       ctx.font = "13px system-ui, sans-serif";
@@ -427,6 +429,7 @@
     });
 
     redrawWithNewSample();
+    window.addEventListener("resize", draw);
   </script>
 </body>
 </html>

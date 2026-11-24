@@ -1,0 +1,22 @@
+# Multiple Predictors {#lm-multiple-predictors}
+
+<div class="draft">Work in progress.</div>
+
+Placeholder for a later chapter. Ideas so far:
+
+- Chapters \@ref(lm-mean) to \@ref(lm-one-way-anova) use one predictor each; most real questions involve more than one
+- `lm(y ~ a + b)`: each slope is the effect of one predictor with the others held fixed
+- factorial ANOVA as multiple regression
+  - two categorical predictors, each dummy coded as in Chapter \@ref(lm-one-way-anova)
+  - interaction = product of the dummy columns; `lm(y ~ a * b)` is shorthand for `a + b + a:b`
+  - same F-values as the factorial ANOVA in Chapter \@ref(factorial-anova); check against `aov()`
+  - unbalanced groups: the order of predictors changes the sums of squares (Type I vs Type II/III); short note only
+- ANCOVA as multiple regression
+  - one categorical predictor plus one continuous covariate: `lm(y ~ group + covariate)`
+  - group difference "adjusted" for the covariate = the group slope with the covariate held fixed
+  - possible example: `iris` sepal length vs sepal width, r = -.12 overall but positive within each species (Simpson's paradox); adding `Species` flips the sign of the slope
+- multiple regression with continuous predictors
+  - no classic named test it reduces to, unlike the t-test or ANOVA
+  - nearest links: each slope's t-test is the same as the test of a partial correlation; the overall F compares the model with the mean-only model (Chapter \@ref(lm-mean)), as in Chapter \@ref(lm-one-way-anova)
+  - R-squared: share of the variance the predictors explain together
+- outcomes that are not continuous (yes/no, counts): see the generalised and mixed models book

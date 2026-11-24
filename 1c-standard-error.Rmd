@@ -217,6 +217,22 @@ my_mean(one_sample)
 5. **Reset**, sample size 5, a few hundred samples; then 50; predict wider or narrower before each run
 6. tick **Expected shape** to see the distribution the formula predicts
 
+### Test Your Predictions
+
+- predict first, then check with **Reset** and a few hundred samples each time:
+
+1. sample size from 5 to 50: wider or narrower bottom panel? by about how much?
+2. keep adding samples (+100 several times) at the same sample size: does the spread of the means keep shrinking?
+3. population SD doubled, sample size unchanged: what happens to the spread of the means?
+4. how does the spread of the sample means compare with the spread of the population in the top panel, for any n above 1?
+
+`r hide("Show explanations")`
+- n 5 to 50: narrower; SE = SD / $\sqrt{n}$, 10 times the n gives about $\sqrt{10} \approx 3.2$ times narrower
+- more samples: no; more samples sharpen the *picture* of the distribution, its spread stays near the SE; only n (and the population SD) change it
+- SD doubled: spread of the means doubles too (SE is proportional to SD)
+- always narrower than the population: averaging cancels out some of the high and low values
+`r unhide()`
+
 - link to code: **+1** = `one_sample_mean(n = 20)` below (one sample, one mean); **+100** = `replicate(100, one_sample_mean(n = 20))`; **SD of the means** = `my_sd()` of all means collected so far
 - repeat that process many times in code to get many sample means:
 

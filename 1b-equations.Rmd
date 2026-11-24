@@ -364,6 +364,25 @@ ggplot(dist_data, aes(x = value, y = density, colour = spread)) +
 - decrease the variance: it gets tighter
 - can switch the dots and the bell curve on and off to focus on one part at a time
 
+### Test Your Predictions
+
+- idea: decide what you expect first, then move the slider to check
+- predict, then check:
+
+1. mean from 0 to 3, variance left at 1: what happens to the curve's position, and to its width?
+2. variance from 1 to 4: how much wider does the curve get? (hint: SD = square root of variance)
+3. still at variance 4: what happens to the height of the peak, and why?
+4. sample size from 10 to 300: do the dots spread out more, less, or about the same?
+5. "Lines to the mean" on, variance up: what happens to the lines, and how does that link to the variance equation below?
+
+`r hide("Show explanations")`
+- mean 3: whole curve slides right; width unchanged, because width is set by the variance
+- variance 4: SD goes from 1 to 2, so the curve is twice as wide (not four times)
+- peak: area under the curve stays at 1, so a curve twice as wide is half as tall
+- sample size: spread about the same; spread comes from the population variance, more dots just fill in the shape more clearly
+- lines: longer on average; variance is (roughly) the average of the squared line lengths, set up in the next section
+`r unhide()`
+
 ## The Variance Equation
 
 - now connect the picture to the equation:

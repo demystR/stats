@@ -15,7 +15,8 @@
 .book-toc li a[href="lm-mean.html"],
 .book-toc li a[href="lm-correlation.html"],
 .book-toc li a[href="lm-t-test.html"],
-.book-toc li a[href="lm-one-way-anova.html"] {
+.book-toc li a[href="lm-one-way-anova.html"],
+.book-toc li a[href="lm-multiple-predictors.html"] {
   color: var(--dm-ink-soft);
   font-style: italic;
 }
