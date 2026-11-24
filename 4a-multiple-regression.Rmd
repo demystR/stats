@@ -1,0 +1,15 @@
+# (PART) Multiple Predictors {-}
+
+# Multiple Regression {#multiple-regression}
+
+<div class="draft">Work in progress.</div>
+
+- Part III chapters use one predictor each; most real questions involve more than one
+- several continuous predictors: `lm(y ~ x1 + x2)`
+- each slope is the effect of one predictor with the others held fixed
+- no classic named test it reduces to, unlike the t-test or ANOVA
+- nearest links:
+  - each slope's t-test is the same as the test of a partial correlation (Chapter \@ref(correlation))
+  - the overall F compares the model with the mean-only model (Chapter \@ref(lm-mean)), as in Chapter \@ref(lm-one-way-anova)
+- R-squared: share of the variance the predictors explain together
+- outcomes that are not continuous (yes/no, counts): see the generalised and mixed models book

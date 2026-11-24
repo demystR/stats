@@ -1,146 +1,251 @@
 # (PART) Basics and Summary Statistics {-}
 
-# What Are Functions? {#functions}
+# What Is A Function? {#functions}
 
 ## The Core Idea
 
-You have already used many functions in R. You may have typed code like `mean(x)`, `sd(x)`, or `summary(x)`. These can feel like magic boxes: you put something in, R thinks for a moment, and an answer appears.
-
-For this book, we will make the box less mysterious.
+You have already used many functions in R. You may have typed code like `mean(x)`, `sd(x)`, or `summary(x)`. These can sometimes feel like magic boxes: you put something in, R thinks for a moment, and an answer appears. The goal of this book is to open up those boxes and make them feel less mysterious.
 
 <div class="summary-box">
-A function takes an <strong>input</strong>, applies a <strong>process</strong>, and returns an <strong>output</strong>.
+<p>In the most simple sense, a function is something that takes an <strong>input</strong>, does some <strong>process</strong> to it, and then produces an <strong>output</strong>.</p>
+<p><code>output &lt;- process(input)</code></p>
 </div>
 
-That is also what a statistical formula does. It takes values, performs operations on those values, and gives you a result.
+That is very similar to what a statistical formula does. The thing you want to find is usually on the left hand side of the = sign, and the often complicated-looking stuff on the right is a process applied to some numbers or data.
 
-## A Wee Function
+## How Functions Work In R
 
-Here is a very basic function that adds two numbers together.
+Below we have an example of how to create a function in R. We use `function()` to create the function, and inside the brackets we put the names of the **input** variables that we want the function to take (this can be anything you want). Here we have told the function to take 2 variables, `a` and `b`, but we still need to tell the function what we want it to do with them!
 
-```{r add-function}
-add_func <- function(a, b) {
-  output <- a + b
-  return(output)
+```{r add-function-1, eval=FALSE}
+add_func <- function(a, b){
+
 }
-
-add_func(2, 5)
 ```
 
-Read it as a sentence:
+Now we have added in the line `c <- a + b` into the function. This is the process we want to apply on the input variables; in this case we are just adding them together and saving the result in another variable called `c`. All of the processes of the function should be contained between the two curly braces.
 
-- the inputs are `a` and `b`;
-- the process is `a + b`;
-- the output is returned with `return()`.
+But we still need to tell the function what we want it to give us as the output!
 
-This is deliberately small. Before we use functions for statistics, we need to see the basic shape.
+```{r add-function-2, eval=FALSE}
+add_func <- function(a, b){
+  c <- a + b
+}
+```
+
+Finally we have added `return()` into the function, which contains exactly what we want the function to provide as **output**. In this case, we want the function to return the value contained in the variable `c`.
+
+```{r add-function}
+add_func <- function(a, b){
+  c <- a + b
+  return(c)
+}
+```
 
 What is the output of `add_func(4, 6)`? `r fitb(10)`
 
 ## Your Turn: Multiply
 
-Write a function called `multiply_func()` that returns the product of `a` and `b`.
+Have a go at making a similar function below. This time, instead of adding the two inputs together, we are going to multiply them. Try making the function yourself, and then run it on the inputs `2` and `5` (the answer should be 10). If you get stuck, use the above example to help you. Remember, in R, the `*` symbol is used for multiplication!
 
 ```{r multiply-exercise, eval=FALSE}
-multiply_func <- function(a, b) {
-  output <- 
-  return(output)
+# make 'multiply_func' return the product of 'a' and 'b'
+multiply_func <- function(a, b){
+
 }
 
-multiply_func(2, 5)
+multiply_func(2,5)
 ```
 
 `r hide("Show one solution")`
 ```{r multiply-solution}
-multiply_func <- function(a, b) {
-  output <- a * b
-  return(output)
+# make 'multiply_func' return the product of 'a' and 'b'
+multiply_func <- function(a, b){
+  c <- a * b
+  return(c)
 }
 
-multiply_func(2, 5)
+multiply_func(2,5)
 ```
 `r unhide()`
 
 ## Defaults
 
-Sometimes we want a function to use a sensible value unless we tell it otherwise. These are called default arguments.
+What if we want the function to automatically use specific inputs unless told otherwise? We can achieve this by simply adding an `=` sign when we define the function and the input variables like so:
 
 ```{r default-function}
-subtract_func <- function(a = 5, b = 3) {
-  return(a - b)
+subtract_func <- function(a = 5, b = 3){
+  c <- a - b
+  return(c)
 }
 
 subtract_func()
-subtract_func(a = 10, b = 5)
 ```
 
-When we run `subtract_func()` without giving it values, R uses `a = 5` and `b = 3`.
+Here we can see that simply by calling `subtract_func()` without specifying any inputs, the function automatically inserts the default values of `a = 5` and `b = 3`, giving an output of `2`.
+
+These can be overridden by specifying the inputs, such as:
+
+```{r default-override}
+subtract_func(a=10, b=5)
+```
+
+We can also simply put in the values without specifying the input variable, as long as they are in the correct order, such as:
+
+```{r default-order}
+subtract_func(10, 5)
+```
+
+This achieves the same result as before, but just be careful that you are definitely putting the inputs in the correct order!
 
 The default value of `b` in `subtract_func()` is `r fitb(3)`.
 
 ## Data Frames As Inputs
 
-Functions do not have to take single numbers. They can also take vectors, data frames, and columns from data frames.
+Let's look at a couple of different kinds of input we can use other than simple numbers.
 
-We will use this simple data frame throughout the book:
+In these chapters we will typically use the tidyverse packages, so load them first:
 
-```{r show-my-data}
+```{r load-tidyverse}
+library(tidyverse)
+```
+
+We will use this simple data frame throughout this chapter. Each row is one hypothetical participant, with their score out of 60 on a practice round and on a test:
+
+```{r make-my-data}
+demo_scores <- tibble(
+  participant = 1:8,
+  practice = c(30, 42, 36, 51, 27, 45, 39, 48),
+  test = c(36, 45, 42, 54, 30, 51, 39, 57)
+)
+
 demo_scores
 ```
 
-Here is a function that takes a data frame and adds a new score column with `mutate()`.
+### Columns Are Just Vectors
 
-```{r dataframe-function}
-add_points <- function(df, points) {
-  output <- mutate(df, adjusted_score = score + points)
-  return(output)
-}
+Each column in our data frame is essentially a vector of 8 numbers. This can be useful if you want to do something to a specific column. To pull out a specific one, we can use the `pull()` function from the dplyr package:
 
-add_points(demo_scores, points = 2)
+```{r dollar-column}
+scores_as_vector <- pull(demo_scores, practice)
+scores_as_vector
 ```
 
-This uses the same idea as the first example. The only difference is that the addition happens to a column in a data frame.
+**Note**: If you are using base R, you can use the extraction operator `$` in a similar way. Try it yourself with `demo_scores$practice`.
 
-## Repeated Arithmetic
+### Repeated Arithmetic
 
 A useful thing about R is that it can repeat simple arithmetic across a whole vector.
 
 Here we add 1 to every score:
 
 ```{r repeated-operation-basic}
-score_values
-score_values + 1
+scores_as_vector + 1
 ```
 
-R does the same operation to each value in the vector. Later, this will help us break down statistical formulas one step at a time.
+R does the same operation to each value in the vector. This will help us later when we encounter statistical formulas that do the same thing to each piece of data.
 
-## A Function With A Default Data Frame
+### Applying This To The Data Frame
 
-Now we will build a function that:
+Now that we understand how the columns are just vectors, we can build a function that can take data frames as inputs and turn the scores into percentages. Our function:
 
-- takes a data frame and a number;
-- adds that number to the `score` column;
-- returns a copy of the changed data frame.
+* takes one data frame `df` and one number `out_of` as input variables
+* calculates each score in the `practice` and `test` columns as a percentage of the value in `out_of`
+* adds two new columns to hold these new calculated percentage scores
+* returns a data frame with these two new columns included
 
-```{r add-points-default-data}
-add_points <- function(df = demo_scores, points = 2) {
-  output <- mutate(df, adjusted_score = score + points)
+```{r dataframe-function}
+scores_as_percentages <- function(df, out_of) {
+  output <- mutate(df,
+    practice_percent = (practice/out_of) * 100,
+    test_percent = (test/out_of) * 100
+  )
   return(output)
 }
 
-add_points()
+scores_as_percentages(demo_scores, out_of = 60)
 ```
 
-If the function worked, the first adjusted score should be 50.
+The new column `practice_percent` is the same as the original `practice` column, only every element in the vector (i.e. the column) has been divided by `out_of` and multiplied by 100. Because `mutate()` returns a data frame, our output is also a data frame.
 
-The first adjusted score is `r fitb(50)`.
+As a percentage, participant 6's practice score is `r fitb(c('75', '75%'))`.
 
-## Bringing The Tools Together
+### Your Turn: Percentage Point Difference
 
-The next chapter uses these tools to translate a statistical equation into R.
+Let's add an extra couple of steps to the above process. Build a function called `percentage_point_change` that takes one data frame `df` and one number `out_of` as input variables. This function should:
 
-The pattern will stay the same:
+* Add two columns with the practice and test scores as percentages for each participant
+* Calculate the difference between the test percentage score and the practice percentage score for each participant
+* Return these differences for each participant **as a vector**
 
-1. Identify the inputs.
-2. Write down the process.
-3. Return the output.
+Then run it on `demo_scores` with `out_of = 60`.
+
+```{r difference-exercise, eval=FALSE}
+percentage_point_change <- function(){
+
+
+
+}
+
+percentage_point_change(demo_scores, out_of = 60)
+```
+
+`r hide("Show a hint")`
+You do not need to work out the percentages again: `scores_as_percentages()` already does that, so call it inside your new function and save the result.
+
+```{r difference-hint-1, eval=FALSE}
+percentage_point_change <- function(df, out_of){
+  percents <- scores_as_percentages(df, out_of)
+  output <-
+  return(output)
+}
+```
+`r unhide()`
+
+`r hide("Show another hint")`
+Use `mutate()` on `percents` to add the `difference` column, subtracting one percentage column from the other. Then use `pull()` to take that column out as a vector.
+
+```{r difference-hint-2, eval=FALSE}
+percentage_point_change <- function(df, out_of){
+  percents <- scores_as_percentages(df, out_of)
+  with_differences <- mutate(percents, difference = )
+  output <- pull(with_differences, )
+  return(output)
+}
+```
+`r unhide()`
+
+`r hide("Show one solution")`
+```{r difference-solution}
+percentage_point_change <- function(df, out_of){
+  percents <- scores_as_percentages(df, out_of)
+  with_differences <- mutate(percents, difference = test_percent - practice_percent)
+  output <- pull(with_differences, difference)
+  return(output)
+}
+
+percentage_point_change(demo_scores, out_of = 60)
+```
+`r unhide()`
+
+`r hide("Show another solution")`
+```{r difference-solution-2}
+# there are really many ways you could choose to do it!
+percentage_point_change <- function(df, out_of){
+  percents <- scores_as_percentages(df, out_of)
+  output <- pull(percents, test_percent) - pull(percents, practice_percent)
+  return(output)
+}
+
+percentage_point_change(demo_scores, out_of = 60)
+```
+`r unhide()`
+
+Participant 8 improved by `r fitb(15)` percentage points.
+
+
+## Applying The Tools
+
+In the next chapter, we will use these skills to build and save our own custom versions of some familiar statistical functions like `mean()` and `var()`, just because we can!
+
+There are often many different ways you could achieve the same goal with functions, but the important thing is to understand and clearly define the **input**, **process**, and **output**!

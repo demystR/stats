@@ -18,7 +18,11 @@ rmd_files:
   - "3b-lm-correlation.Rmd"
   - "3c-lm-t-test.Rmd"
   - "3d-lm-one-way-anova.Rmd"
-  - "3e-lm-multiple-predictors.Rmd"
+  # Part IV, Multiple Predictors: outlines only, not in the book yet.
+  # Uncomment these three lines to add the part back.
+  # - "4a-multiple-regression.Rmd"
+  # - "4b-lm-factorial-anova.Rmd"
+  # - "4c-lm-ancova.Rmd"
 language:
   ui:
     chapter_name: "Chapter "

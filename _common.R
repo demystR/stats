@@ -65,7 +65,7 @@ file.copy(
   overwrite = TRUE
 )
 
-widgets <- c("mean-variance", "sampling", "correlation", "regression")
+widgets <- c("mean-variance", "correlation", "regression")
 for (widget in widgets) {
   widget_dir <- file.path("apps", widget)
   output_dir <- file.path("docs", widget_dir)

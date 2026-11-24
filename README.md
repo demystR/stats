@@ -25,7 +25,7 @@ Part I: Basics and Summary Statistics
 
 - `1a-functions.Rmd` (`#functions`): what functions are: input, process, output.
 - `1b-equations.Rmd` (`#equations`): from equations to code; `my_mean()` and `my_var()`; the `my_functions.R` toolbox.
-- `1c-standard-error.Rmd` (`#standard-error`): standard deviation, standard error, `my_summary()`, and z-scores; the sampling widget.
+- `1c-standard-error.Rmd` (`#standard-error`): standard deviation, standard error, `my_summary()`, and z-scores.
 
 Part II: Inferential Tests
 
@@ -53,7 +53,6 @@ Supporting files:
 Each widget is a self-contained HTML file with no server needed, embedded with an `<iframe>`. Edit the files in `apps/`, not the copies in `docs/apps/`.
 
 - `apps/mean-variance/embed.html`: mean and variance of a normal distribution. `app.R` in the same folder is an older Shiny version.
-- `apps/sampling/embed.html`: building a distribution of sample means one sample at a time. 
 - `apps/correlation/embed.html`: covariance and correlation.
 - `apps/regression/embed.html`: find the line with the smallest sum of squared errors, then compare it with the least-squares line; residual squares, an error-by-slope panel, and gradient descent (for Correlation as a Linear Model; not embedded yet). `?challenge=0` unlocks everything for lectures.
 

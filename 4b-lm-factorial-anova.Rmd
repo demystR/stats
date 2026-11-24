@@ -1,0 +1,9 @@
+# Factorial ANOVA as a Linear Model {#lm-factorial-anova}
+
+<div class="draft">Work in progress.</div>
+
+- factorial ANOVA (Chapter \@ref(factorial-anova)) as multiple regression (Chapter \@ref(multiple-regression)) with categorical predictors
+  - two categorical predictors, each dummy coded as in Chapter \@ref(lm-one-way-anova)
+  - interaction = product of the dummy columns; `lm(y ~ a * b)` is shorthand for `a + b + a:b`
+  - same F-values as the factorial ANOVA; check against `aov()`
+- unbalanced groups: the order of predictors changes the sums of squares (Type I vs Type II/III); short note only

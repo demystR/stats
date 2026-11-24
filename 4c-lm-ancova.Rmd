@@ -1,0 +1,8 @@
+# ANCOVA as a Linear Model {#lm-ancova}
+
+<div class="draft">Work in progress.</div>
+
+- one categorical predictor plus one continuous covariate: `lm(y ~ group + covariate)`
+- group difference "adjusted" for the covariate = the group slope with the covariate held fixed
+- links: one-way ANOVA as a linear model (Chapter \@ref(lm-one-way-anova)) plus a slope (Chapter \@ref(lm-correlation))
+- possible example: `iris` sepal length vs sepal width, r = -.12 overall but positive within each species (Simpson's paradox); adding `Species` flips the sign of the slope

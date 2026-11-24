@@ -76,39 +76,6 @@ c(mine = my_se(c(2, 4, 9)), R = t.test(c(2, 4, 9))$stderr)
 all.equal(my_se(c(2, 4, 9)), t.test(c(2, 4, 9))$stderr)
 ```
 
-## Seeing standard error
-
-A population of scores, then one sample of 20. Run the second chunk a few times.
-
-```{r population}
-population_scores <- rnorm(n = 10000, mean = 50, sd = 10)
-my_mean(population_scores)
-my_sd(population_scores)
-```
-
-```{r one-sample}
-one_sample <- sample(population_scores, size = 20)
-my_mean(one_sample)
-```
-
-Repeat that 1000 times and compare the spread of the sample means with the formula.
-
-```{r many-samples}
-one_sample_mean <- function(n) {
-  one_sample <- sample(population_scores, size = n)
-  my_mean(one_sample)
-}
-
-sample_means_20 <- replicate(1000, one_sample_mean(n = 20))
-
-c(
-  simulated = my_sd(sample_means_20),
-  formula = my_sd(population_scores) / sqrt(20)
-)
-```
-
-Try changing 20 to 5 and then 50 in both places. What happens to the standard error?
-
 ## Your turn: write `my_summary()`
 
 Fill in each column. Use your own functions wherever you can.
